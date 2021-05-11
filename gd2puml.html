@@ -1,0 +1,186 @@
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    #source, #result {
+        width: 50%;
+        height: 100%
+    }
+    #button {
+        width: 5rem;
+        height: 5rem;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3em;
+    }
+</style>
+<button id="button" onclick="convert()">▶️</button>
+<form spellcheck="false"><textarea id="source"></textarea><textarea id="result"></textarea></form>
+<script>
+    result.value = ""
+    function convert(){
+        
+        result.value = "@startuml\n"
+        
+        let classes = {}
+        let globalNames = []
+        
+        let code = source.value.replace(/#global (.*)/gm, (m, g1) => {
+            globalNames.push(g1.trim());
+            return 'class_name ' + g1
+        })
+        .replace(/#.*/gm, '')
+        .replace(/([[{,\\])\n\s*/g, '$1 ').replace(/\s*\n}/g, ' }')
+        
+        {
+            let lastClass
+            let prevMatchEnd
+            let lastMatchIndex
+            for(const match of code.matchAll(/(?:class_name (.*)\n\s*)?extends (.*)/gm)){
+                if(lastClass)
+                    lastClass.body = code.substring(prevMatchEnd + 1, match.index)
+                prevMatchEnd = match.index + match[0].length - 1
+                lastMatchIndex = match.index
+                let [_, className, classExtends] = match 
+                lastClass = {
+                    name: className || ("Class" + Object.keys(classes).length),
+                    extends: classExtends
+                }
+                if(globalNames.includes(lastClass.name))
+                    lastClass.static = true
+                classes[lastClass.name] = lastClass
+            }
+            if(lastClass) //TODO: unduplicate
+                lastClass.body = code.substring(prevMatchEnd + 1, code.length)
+        }
+
+        for(let name of Object.keys(classes)){
+            let nameRegex = new RegExp('\\b' + name + '\\b')
+            for(let cls of Object.values(classes)){
+                if(name == cls.name)
+                    continue
+                if(nameRegex.test(cls.body)){
+                    if(!cls.uses)
+                        cls.uses = []
+                    cls.uses.push(name)
+                }
+            }
+        }
+
+        for(let cls of Object.values(classes)){
+            for(const match of cls.body.matchAll(/^func\s+(.*):|^(?:export\(.*?\)\s+)?(?:onready\s+)?(var|const)\s+(.*)|^enum\s+(.*?)\s+{(.*?)}/gm)){
+                let [_, func, propType, prop, enumName, enumKeys] = match
+                if(func){
+                    if(!cls.funcs)
+                        cls.funcs = {}
+                    let newFunc = { name: func.match(/^\w+/)[0], sign: func }
+                    cls.funcs[newFunc.name] = newFunc
+                } else if(prop){
+                    if(!cls.props)
+                        cls.props = {}
+                    let newProp = { name: prop.match(/^\w+/)[0], decl: prop }
+                    if(propType == 'const')
+                        newProp.const = true
+                    cls.props[newProp.name] = newProp
+                } else if(enumName){
+                    if(!cls.enums)
+                        cls.enums = {}
+                    let newEnum = { name: enumName, keys: enumKeys.split(/\s*,\s*/g) }
+                    cls.enums[newEnum.name] = newEnum
+                }
+            }
+        }
+
+        for(let cls of Object.values(classes)){
+            if(cls.funcs){
+                let currentParent = cls
+                //console.log('class', cls.name)
+                while(currentParent.extends && classes[currentParent.extends]){
+                    currentParent = classes[currentParent.extends]
+                    //console.log('extends', currentParent.name)
+                    if(currentParent.funcs)
+                    for(let func of Object.values(cls.funcs)){
+                        if(currentParent.funcs[func.name]){
+                            currentParent.funcs[func.name].virtual = true
+                            //console.log(func.name, 'is virtual')
+                        }
+                    }
+                }
+            }
+        }
+
+        var firstClass = true
+        for(let cls of Object.values(classes)){
+            if(!firstClass)
+                result.value += '}\n\n'
+            firstClass = false
+            result.value += 'class ' + cls.name + ' {\n'
+
+            if(cls.props)
+            for(let prop of Object.values(cls.props)){
+                result.value += '    '
+                if(cls.static)
+                    result.value += '{static} '
+                if((/[()]/).test(prop.decl))
+                    result.value += '{field} '
+                if(prop.name.startsWith('_'))
+                    result.value += '-'
+                else
+                    result.value += '+'
+                result.value += (prop.const ? 'const' : 'var') + ' ' + prop.decl + '\n'
+            }
+
+            if(cls.funcs)
+            for(let func of Object.values(cls.funcs)){
+                result.value += '    '
+                if(func.virtual)
+                    result.value += '{abstract} '
+                else if(cls.static)
+                    result.value += '{static} '
+                if(func.name.startsWith('_'))
+                    result.value += '-'
+                else
+                    result.value += '+'
+                result.value += 'func ' + func.sign + '\n'
+            }
+
+            if(cls.enums){
+                for(let enm of Object.values(cls.enums)){
+                    result.value += '}\n'
+                    result.value += 'enum ' + enm.name + ' {\n'
+                    for(let key of enm.keys)
+                        result.value += '    ' + key + '\n'
+                }
+            }
+
+            //delete cls.body
+        }
+
+        if(classes.length)
+            result.value += '}\n\n'
+
+        for(let cls of Object.values(classes)){
+            if(cls.extends)
+                result.value += cls.extends + ' <|-- ' + cls.name + '\n'
+        }
+        /*
+        for(let cls of Object.values(classes)){
+            if(cls.uses)
+            for(let used of cls.uses)
+                result.value += used + ' o-- ' + cls.name + '\n'
+        }
+        */
+        for(let cls of Object.values(classes)){
+            if(cls.enums)
+            for(let enm of Object.values(cls.enums))
+                result.value += cls.name + ' *-- ' + enm.name + '\n'
+        }
+
+        result.value += "@enduml"
+        
+        return classes
+    }
+</script>
