@@ -1,0 +1,262 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Damagable",
+"class": "Autoattacking",
+"language": "GDScript",
+"path": "res://scripts/game/autoattacking.gd"
+}, {
+"base": "Node2D",
+"class": "Avatar",
+"language": "GDScript",
+"path": "res://scripts/game/avatar.gd"
+}, {
+"base": "Hiding",
+"class": "AvatarOwner",
+"language": "GDScript",
+"path": "res://scripts/game/avatar_owner.gd"
+}, {
+"base": "AvatarOwner",
+"class": "Bullet",
+"language": "GDScript",
+"path": "res://entities/bullet/bullet.gd"
+}, {
+"base": "Avatar",
+"class": "BulletAvatar",
+"language": "GDScript",
+"path": "res://entities/bullet/bullet_avatar.gd"
+}, {
+"base": "Camera2D",
+"class": "CameraController",
+"language": "GDScript",
+"path": "res://scripts/game/camera.gd"
+}, {
+"base": "AvatarOwner",
+"class": "Damagable",
+"language": "GDScript",
+"path": "res://scripts/game/damagable.gd"
+}, {
+"base": "Control",
+"class": "GameUI",
+"language": "GDScript",
+"path": "res://scripts/game/game_ui.gd"
+}, {
+"base": "Area2D",
+"class": "Ground",
+"language": "GDScript",
+"path": "res://scripts/game/ground.gd"
+}, {
+"base": "Node2D",
+"class": "Hiding",
+"language": "GDScript",
+"path": "res://scripts/game/hiding_in_the_fog_of_war.gd"
+}, {
+"base": "Damagable",
+"class": "Inhibitor",
+"language": "GDScript",
+"path": "res://entities/buildings/inhibitor/inhibitor.gd"
+}, {
+"base": "SelectableAvatar",
+"class": "InhibitorAvatar",
+"language": "GDScript",
+"path": "res://entities/buildings/inhibitor/inhibitor_avatar.gd"
+}, {
+"base": "Panel",
+"class": "LobbyUI_Page1_Login",
+"language": "GDScript",
+"path": "res://scripts/lobby/lobby_ui_page1_login.gd"
+}, {
+"base": "TabContainer",
+"class": "LobbyUI_Page2_ConnectOrHostGame",
+"language": "GDScript",
+"path": "res://scripts/lobby/lobby_ui_page2_connect_or_host_game.gd"
+}, {
+"base": "Panel",
+"class": "LobbyUI_Page3_JoinTeam",
+"language": "GDScript",
+"path": "res://scripts/lobby/lobby_ui_page3_join_team.gd"
+}, {
+"base": "Panel",
+"class": "LobbyUI_Page4_SelectRunes",
+"language": "GDScript",
+"path": "res://scripts/lobby/lobby_ui_page4_select_runes.gd"
+}, {
+"base": "Node",
+"class": "LobbyUI_PageSwitcher",
+"language": "GDScript",
+"path": "res://scripts/lobby_ui_page_switcher.gd"
+}, {
+"base": "Minion",
+"class": "MeleeMinon",
+"language": "GDScript",
+"path": "res://entities/minions/melee/melee_minion.gd"
+}, {
+"base": "Moving",
+"class": "Minion",
+"language": "GDScript",
+"path": "res://entities/minions/minion.gd"
+}, {
+"base": "SelectableAvatar",
+"class": "MinionAvatar",
+"language": "GDScript",
+"path": "res://entities/minions/minion_avatar.gd"
+}, {
+"base": "Moving",
+"class": "Monster",
+"language": "GDScript",
+"path": "res://entities/monsters/monster.gd"
+}, {
+"base": "SelectableAvatar",
+"class": "MonsterAvatar",
+"language": "GDScript",
+"path": "res://entities/monsters/monster_avatar.gd"
+}, {
+"base": "Autoattacking",
+"class": "Moving",
+"language": "GDScript",
+"path": "res://scripts/game/moving.gd"
+}, {
+"base": "Moving",
+"class": "Player",
+"language": "GDScript",
+"path": "res://entities/champions/player.gd"
+}, {
+"base": "SelectableAvatar",
+"class": "PlayerAvatar",
+"language": "GDScript",
+"path": "res://entities/champions/player_avatar.gd"
+}, {
+"base": "Reference",
+"class": "Selectable",
+"language": "GDScript",
+"path": "res://trash/selectable.gd"
+}, {
+"base": "Avatar",
+"class": "SelectableAvatar",
+"language": "GDScript",
+"path": "res://scripts/game/selectable_avatar.gd"
+}, {
+"base": "Node",
+"class": "SpawnManager",
+"language": "GDScript",
+"path": "res://scripts/game/spawn_manager.gd"
+}, {
+"base": "Damagable",
+"class": "Totem",
+"language": "GDScript",
+"path": "res://entities/totem/totem.gd"
+}, {
+"base": "SelectableAvatar",
+"class": "TotemAvatar",
+"language": "GDScript",
+"path": "res://entities/totem/totem_avatar.gd"
+}, {
+"base": "Autoattacking",
+"class": "Turret",
+"language": "GDScript",
+"path": "res://entities/buildings/turret/turret.gd"
+}, {
+"base": "SelectableAvatar",
+"class": "TurretAvatar",
+"language": "GDScript",
+"path": "res://entities/buildings/turret/turret_avatar.gd"
+}, {
+"base": "Area2D",
+"class": "VisionArea",
+"language": "GDScript",
+"path": "res://scripts/game/vision_area.gd"
+} ]
+_global_script_class_icons={
+"Autoattacking": "",
+"Avatar": "",
+"AvatarOwner": "",
+"Bullet": "",
+"BulletAvatar": "",
+"CameraController": "",
+"Damagable": "",
+"GameUI": "",
+"Ground": "",
+"Hiding": "",
+"Inhibitor": "",
+"InhibitorAvatar": "",
+"LobbyUI_Page1_Login": "",
+"LobbyUI_Page2_ConnectOrHostGame": "",
+"LobbyUI_Page3_JoinTeam": "",
+"LobbyUI_Page4_SelectRunes": "",
+"LobbyUI_PageSwitcher": "",
+"MeleeMinon": "",
+"Minion": "",
+"MinionAvatar": "",
+"Monster": "",
+"MonsterAvatar": "",
+"Moving": "",
+"Player": "",
+"PlayerAvatar": "",
+"Selectable": "",
+"SelectableAvatar": "",
+"SpawnManager": "",
+"Totem": "",
+"TotemAvatar": "",
+"Turret": "",
+"TurretAvatar": "",
+"VisionArea": ""
+}
+
+[application]
+
+config/name="Godot Stable"
+run/main_scene="res://scenes/main.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+Types="*res://scripts/types.gd"
+Game="*res://scripts/game_info.gd"
+Lobby="*res://scripts/lobby/lobby_manager.gd"
+Events="*res://scripts/game/events.gd"
+AvatarSpawner="*res://scripts/game/avatar_spawner.gd"
+
+[debug]
+
+gdscript/warnings/unused_argument=false
+gdscript/warnings/return_value_discarded=false
+
+[display]
+
+window/size/width=1280
+window/size/height=720
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
+
+[editor]
+
+convert_text_resources_to_binary_on_export=true
+
+[global]
+
+binary=false
+
+[layer_names]
+
+2d_physics/layer_2="team1vision"
+2d_physics/layer_3="team2vision"
+2d_physics/layer_4="team1gameplay"
+2d_physics/layer_5="team2gameplay"
+
+[physics]
+
+common/physics_fps=5
+2d/default_linear_damp=0.0
+
+[rendering]
+
+environment/default_clear_color=Color( 0, 0, 0, 1 )
+environment/default_environment="res://default_env.tres"

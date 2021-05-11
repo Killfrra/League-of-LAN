@@ -1,0 +1,55 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://entities/buildings/turret/turret.gd" type="Script" id=1]
+[ext_resource path="res://entities/buildings/turret/turret_avatar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://entities/bullet/bullet.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scripts/game/vision_area.gd" type="Script" id=4]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 137.542
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 187.628
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 750.0
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 1350.0
+
+[node name="Turret" type="StaticBody2D"]
+script = ExtResource( 1 )
+avatar_prefab = ExtResource( 2 )
+health_max = 5000.0
+health_regen = 0.0
+armor = 40.0
+mr = 40.0
+damage = 152.0
+attack_speed = 0.833
+bullet_prefab = ExtResource( 3 )
+attack_range = 750.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="GameplayRadius" type="Area2D" parent="."]
+input_pickable = false
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GameplayRadius"]
+shape = SubResource( 2 )
+
+[node name="AcquisitionRadius" type="Area2D" parent="."]
+input_pickable = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AcquisitionRadius"]
+shape = SubResource( 3 )
+
+[node name="SightRadius" type="Area2D" parent="."]
+input_pickable = false
+monitorable = false
+script = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SightRadius"]
+shape = SubResource( 4 )

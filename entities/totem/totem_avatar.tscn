@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://sprites/LightSprite.png" type="Texture" id=1]
+[ext_resource path="res://entities/totem/totem_avatar.gd" type="Script" id=2]
+[ext_resource path="res://sprites/circle.png" type="Texture" id=3]
+[ext_resource path="res://sprites/godot_favicon.png" type="Texture" id=4]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 45.0
+
+[node name="TotemAvatar" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Icon" type="Sprite" parent="."]
+texture = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Icon"]
+rotation = 3.14159
+texture = ExtResource( 4 )
+
+[node name="Light2D" type="Light2D" parent="."]
+position = Vector2( 10, 0 )
+texture = ExtResource( 1 )
+texture_scale = 1.35
+mode = 2
+shadow_enabled = true
+
+[node name="SelectionRadius" type="Area2D" parent="."]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionRadius"]
+shape = SubResource( 1 )

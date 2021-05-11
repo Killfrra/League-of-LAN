@@ -1,0 +1,17 @@
+3844edc3d1660e6e25a999aafc25a878
+::res://::1618220569
+default_env.tres::Environment::1618220486::0::1::::<><>::
+game.gd::GDScript::1618219668::0::1::::<><>::
+icon.png::StreamTexture2D::1617485016::1618220571::1::::<><>::
+::res://lobby/::1618218154
+lobby.gd::GDScript::1618218154::0::1::::<><>::
+lobby_old.gd::GDScript::1618167988::0::1::::<><>::
+::res://references/::1618220565
+LoL_client_cropped_resized.png::StreamTexture2D::1617732120::1618220572::1::::<><>::
+Screenshot_20210305_193940.png::StreamTexture2D::1617972188::1618220573::1::::<><>::
+Screenshot_20210404_224922.png::StreamTexture2D::1617701198::1618220573::1::::<><>::
+Screenshot_20210404_225006.png::StreamTexture2D::1617693382::1618220574::1::::<><>::
+Screenshot_20210404_225022.png::StreamTexture2D::1617721844::1618220574::1::::<><>::
+Screenshot_20210404_225043.png::StreamTexture2D::1617716336::1618220575::1::::<><>::
+::res://scenes/::1618220569
+main.tscn::PackedScene::1618220486::0::1::::<><>::res://references/Screenshot_20210404_225006.png<>res://icon.png<>res://references/Screenshot_20210404_224922.png<>res://references/Screenshot_20210404_225043.png<>res://references/Screenshot_20210404_225022.png<>res://references/LoL_client_cropped_resized.png<>res://lobby/lobby.gd<>res://references/Screenshot_20210305_193940.png

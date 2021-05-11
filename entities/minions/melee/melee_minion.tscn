@@ -1,0 +1,83 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://entities/minions/melee/melee_minion.gd" type="Script" id=1]
+[ext_resource path="res://scripts/game/vision_area.gd" type="Script" id=2]
+[ext_resource path="res://entities/minions/minion_avatar.tscn" type="PackedScene" id=3]
+
+[sub_resource type="PhysicsMaterial" id=8]
+friction = 0.0
+
+[sub_resource type="CircleShape2D" id=9]
+radius = 31.5
+
+[sub_resource type="CircleShape2D" id=10]
+radius = 34.0
+
+[sub_resource type="CircleShape2D" id=11]
+radius = 327.0
+
+[sub_resource type="CircleShape2D" id=12]
+radius = 525.0
+
+[sub_resource type="CircleShape2D" id=13]
+radius = 702.0
+
+[sub_resource type="CircleShape2D" id=7]
+radius = 1200.0
+
+[node name="MeleeMinion" type="RigidBody2D"]
+mode = 2
+physics_material_override = SubResource( 8 )
+gravity_scale = 0.0
+linear_damp = 0.0
+script = ExtResource( 1 )
+avatar_prefab = ExtResource( 3 )
+health_max = 477.0
+health_regen = 0.0
+armor = 0.0
+mr = 0.0
+damage = 12.0
+attack_speed = 1.25
+attack_range = 47.0
+move_speed = 325.0
+body = NodePath(".")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 9 )
+
+[node name="GameplayRadius" type="Area2D" parent="."]
+input_pickable = false
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GameplayRadius"]
+shape = SubResource( 10 )
+
+[node name="WakeUpRadius" type="Area2D" parent="."]
+input_pickable = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WakeUpRadius"]
+shape = SubResource( 11 )
+
+[node name="AcquisitionRadius" type="Area2D" parent="."]
+input_pickable = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AcquisitionRadius"]
+shape = SubResource( 12 )
+
+[node name="FirstAcquisitionRadius" type="Area2D" parent="."]
+input_pickable = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FirstAcquisitionRadius"]
+shape = SubResource( 13 )
+
+[node name="SightRadius" type="Area2D" parent="."]
+input_pickable = false
+monitorable = false
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SightRadius"]
+position = Vector2( 0, -4.48987 )
+shape = SubResource( 7 )
