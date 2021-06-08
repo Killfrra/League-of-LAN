@@ -1,14 +1,6 @@
 class_name TotemAvatar
-extends SelectableAvatar
-
-#TODO: same as in turret_avatar.gd
-
-func pack_initials(for_own_team: bool):
-	return {
-		"owner_team": avatar_owner.team,
-		"global_position": avatar_owner.global_position
-	}
+extends DamagableAvatar
 
 func init(data):
-	.unpack(data)
+	.init(data)
 	$Light2D.enabled = !should_disable_light()

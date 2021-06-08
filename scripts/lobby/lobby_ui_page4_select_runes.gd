@@ -1,5 +1,5 @@
 class_name LobbyUI_Page4_SelectRunes
-extends Panel
+extends Control
 
 export(NodePath) onready var left_player_list = get_node(left_player_list) #as VBoxContainer?
 export(NodePath) onready var right_player_list = get_node(right_player_list) #as VBoxContainer?
@@ -30,6 +30,11 @@ func left_or_right(team): #TODO: rename
 		return team == Lobby.local_client.team
 
 func on_Game_started(my_team_choices):
+	
+	#TODO: clean lists, etc...
+	lockin_button.disabled = false
+	#TODO: move to Lobby
+	Lobby.players_ready = 0
 	
 	for player in Game.players.values():
 		var team_list

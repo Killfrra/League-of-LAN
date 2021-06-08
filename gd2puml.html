@@ -23,38 +23,56 @@
     result.value = ""
     function convert(){
         
-        result.value = "@startuml\n"
+        result.value = "@startuml\nscale 2\n\n"
         
         let classes = {}
         let globalNames = []
         
         let code = source.value.replace(/#global (.*)/gm, (m, g1) => {
-            globalNames.push(g1.trim());
+            globalNames.push(g1.trim())
             return 'class_name ' + g1
         })
         .replace(/#.*/gm, '')
         .replace(/([[{,\\])\n\s*/g, '$1 ').replace(/\s*\n}/g, ' }')
-        
+
         {
             let lastClass
             let prevMatchEnd
             let lastMatchIndex
-            for(const match of code.matchAll(/(?:class_name (.*)\n\s*)?extends (.*)/gm)){
+            for(const match of code.matchAll(/^(?:class_name (.*?)(?:,\s*['"](.*)["'])?\n\s*)?extends (.*)/gm)){
                 if(lastClass)
                     lastClass.body = code.substring(prevMatchEnd + 1, match.index)
                 prevMatchEnd = match.index + match[0].length - 1
                 lastMatchIndex = match.index
-                let [_, className, classExtends] = match 
+                let [_, className, iconPath, classExtends, subclassName, subclassExtends, subclassBody] = match
                 lastClass = {
-                    name: className || ("Class" + Object.keys(classes).length),
-                    extends: classExtends
+                    name: className || subclassName || ("Class" + Object.keys(classes).length),
+                    extends: classExtends || subclassExtends
                 }
-                if(globalNames.includes(lastClass.name))
+                if(subclassName)
+                    lastClass.subclass = true
+                else if(globalNames.includes(lastClass.name))
                     lastClass.static = true
                 classes[lastClass.name] = lastClass
             }
             if(lastClass) //TODO: unduplicate
                 lastClass.body = code.substring(prevMatchEnd + 1, code.length)
+        }
+
+        for(let cls of Object.values(classes)){
+            for(const match of cls.body.matchAll(/class ([^\s]+)(?: extends ([^\s]+)):((?:\t{1,}.*|\n)*)/gm)){
+                let [_, subclassName, subclassExtends, subclassBody] = match
+                let newSubclass = {
+                    name: subclassName,
+                    extends: subclassExtends,
+                    body: subclassBody,
+                    subclass: true
+                }
+                if(!cls.subclasses)
+                    cls.subclasses = {}
+                cls.subclasses[newSubclass.name] = newSubclass
+                classes[subclassName] = newSubclass
+            }
         }
 
         for(let name of Object.keys(classes)){
@@ -71,25 +89,35 @@
         }
 
         for(let cls of Object.values(classes)){
-            for(const match of cls.body.matchAll(/^func\s+(.*):|^(?:export\(.*?\)\s+)?(?:onready\s+)?(var|const)\s+(.*)|^enum\s+(.*?)\s+{(.*?)}/gm)){
-                let [_, func, propType, prop, enumName, enumKeys] = match
-                if(func){
-                    if(!cls.funcs)
-                        cls.funcs = {}
-                    let newFunc = { name: func.match(/^\w+/)[0], sign: func }
-                    cls.funcs[newFunc.name] = newFunc
-                } else if(prop){
-                    if(!cls.props)
-                        cls.props = {}
-                    let newProp = { name: prop.match(/^\w+/)[0], decl: prop }
-                    if(propType == 'const')
-                        newProp.const = true
-                    cls.props[newProp.name] = newProp
-                } else if(enumName){
-                    if(!cls.enums)
-                        cls.enums = {}
-                    let newEnum = { name: enumName, keys: enumKeys.split(/\s*,\s*/g) }
-                    cls.enums[newEnum.name] = newEnum
+            for(const match of cls.body.matchAll(/^(\t*)(?:((?:puppet(?:sync)?|master(?:sync)?|remote(?:sync)?)\s+)?func\s+(.*):|(export(?:\s*\(.*?\))?\s+)?(?:onready\s+)?(var|const)\s+(.*?)(?: setget(?: *(\w+))?(?:, *(\w+))?)?$|enum\s+(.*?)\s+{(.*?)})/gm)){
+                let [_, indentationLevel, remoteMode, func, propExport, propType, prop, propSetter, propGetter, enumName, enumKeys] = match
+                if(!indentationLevel || (cls.subclass && indentationLevel.length == 1)){
+                    if(func){
+                        if(!cls.funcs)
+                            cls.funcs = {}
+                        let newFunc = { name: func.match(/^\w+/)[0], sign: func }
+                        if(remoteMode)
+                            newFunc.remote = true
+                        cls.funcs[newFunc.name] = newFunc
+                    } else if(prop){
+                        if(!cls.props)
+                            cls.props = {}
+                        let newProp = { name: prop.match(/^\w+/)[0], decl: prop }
+                        if(propType == 'const')
+                            newProp.const = true
+                        if(propExport)
+                            newProp.exported = true
+                        if(propSetter)
+                            newProp.setter = propSetter
+                        if(propGetter)
+                            newProp.getter = propGetter
+                        cls.props[newProp.name] = newProp
+                    } else if(enumName){
+                        if(!cls.enums)
+                            cls.enums = {}
+                        let newEnum = { name: enumName, keys: enumKeys.split(/\s*,\s*/g) }
+                        cls.enums[newEnum.name] = newEnum
+                    }
                 }
             }
         }
@@ -108,10 +136,147 @@
                             //console.log(func.name, 'is virtual')
                         }
                     }
+                    if(!cls.parents)
+                        cls.parents = []
+                    cls.parents.push(currentParent)
                 }
             }
         }
 
+        for(let cls of Object.values(classes)){
+            if(cls.parents)
+            for(let parent of cls.parents){
+                if(!parent.childs)
+                    parent.childs = []
+                parent.childs.push(cls)
+            }
+        }
+
+        for(let cls of Object.values(classes)){
+            if(cls.props && cls.funcs){
+                for(let prop of Object.values(cls.props)){
+                    for(let setterOrGetter of [prop.setter, prop.getter]){
+                        if(setterOrGetter && cls.funcs[setterOrGetter]){
+                            var setterOrGetterOverrriden = false
+                            if(cls.childs)
+                            for(let child of cls.childs){
+                                if(child.funcs && child.funcs[setterOrGetter]){
+                                    setterOrGetterOverrriden = true
+                                    break
+                                }
+                            }
+                            if(!setterOrGetterOverrriden){
+                                delete cls.funcs[setterOrGetter]
+                                console.log(cls.name + '.' + setterOrGetter, 'removed')
+                            } else
+                                console.log(cls.name + '.' + setterOrGetter, 'overriden')
+                        }
+                    }
+                }
+            }
+        }
+
+        let oneIsParentOfAnother = (classA, classB) => {
+            return (classA.parents && classA.parents.includes(classB)) || (classB.parents && classB.parents.includes(classA))
+        }
+                        
+        let definesName = (classB, name) => {
+            return (classB.funcs && classB.funcs[name]) || (classB.props && classB.props[name])
+        }
+
+
+        for(let classA of Object.values(classes)){
+            if(classA.props || classA.funcs){
+                let propRegexTemplate = /(?<=[\w})\]][\t ]*)\.test\b|\.(?:has|get|set|rpc|rset|call(?:v|_deferred)?)\((["'])test\1|\[(['"])test\2|\.rpc(?:_unreliable)?_id\(.*?,\s*(["'])test\3/.source //.replace(/^\/|\/$/g, '')
+                
+                let allProps = []
+                if(classA.props){
+                    allProps = Object.values(classA.props)
+                    if(classA.funcs)
+                        allProps = allProps.concat(Object.values(classA.funcs))
+                } else if(classA.funcs)
+                    allProps = Object.values(classA.funcs)
+                
+                for(let prop of allProps){
+                    //if(prop.exported || ["_ready", "_process", "_physics_process"].includes(prop.name))
+                    //    continue
+                    let propRegex = new RegExp(propRegexTemplate.replace(/test/g, prop.name))
+                    let foundInAnotherClass = false
+                    for(let classB of Object.values(classes)){
+                        if(classB.body && propRegex.test(classB.body)){
+                            foundInAnotherClass = true
+                            break
+                        }
+                    }
+
+                    let foundNamesake = false
+                    /*
+                    for(let classB of Object.values(classes)){
+
+                        if(classB == classA)
+                            continue
+
+                        if(!oneIsParentOfAnother(classA, classB)){
+                            let boothHaveParentWithFunc = false
+                            if(classA.parents)
+                            for(let parent of classA.parents)
+                                if(parent.funcs && parent.funcs[prop.name] && classB.parents && classB.parents.includes(parent)){
+                                    boothHaveParentWithFunc = true
+                                    break
+                                }
+                            if(!boothHaveParentWithFunc){
+                                let namesake = definesName(classB, prop.name)
+                                if(namesake)
+                                    console.log(classA.name, 'and', classB.name, 'booth define', prop.name)
+                                foundNamesake ||= !!namesake
+                            }
+                        }
+                    }
+                    */
+                    if(!foundInAnotherClass){
+                        //console.log(classA.name, '->', prop.name, 'may be protected')
+                        prop.protected = true
+                        let usedInRelative = false
+                        let nameRegex = new RegExp('\\b' + prop.name + '\\b')
+                        for(let classB of Object.values(classes))
+                            if(classB != classA && classB.body && oneIsParentOfAnother(classA, classB) && nameRegex.test(classB.body)){
+                                usedInRelative = true
+                                break
+                            }
+                        if(!usedInRelative){
+                            //console.log(classA.name, '->', prop.name, 'may be private')
+                            prop.private = true
+                        }
+                    } else if(foundNamesake){
+                        console.log(prop.name, 'collision')
+                    }
+                }
+            }
+        }
+        /*
+        let mergeClasses = (a, b) => {
+            for(let prop of Object.keys(b)){
+                if(a[prop] !== undefined && a[prop] != b[prop]){
+                    if(Array.isArray(a[prop]) && Array.isArray(b[prop]))
+                        a[prop] = a[prop].concat(b[prop])
+                    else if(typeof(a[prop]) == "object" && typeof(b[prop]) == "object"){
+                        //console.log('->', prop)
+                        a[prop] = mergeClasses(a[prop], b[prop])
+                        //console.log('<-', prop)
+                    } else
+                        console.log('merging conflict', prop)
+                } else
+                    a[prop] = b[prop]
+            }
+            return a
+        }
+
+        if(classes.AvatarOwner && classes.Hiding){
+            classes.AvatarOwner = mergeClasses(classes.Hiding, classes.AvatarOwner)
+            classes.AvatarOwner.name = "AvatarOwner"
+            delete classes.Hiding
+        }
+        */
         var firstClass = true
         for(let cls of Object.values(classes)){
             if(!firstClass)
@@ -122,13 +287,16 @@
             if(cls.props)
             for(let prop of Object.values(cls.props)){
                 result.value += '    '
-                if(cls.static)
-                    result.value += '{static} '
+                //if(cls.static)
+                //    result.value += '{static} '
                 if((/[()]/).test(prop.decl))
                     result.value += '{field} '
-                if(prop.name.startsWith('_'))
-                    result.value += '-'
-                else
+                if(prop.name.startsWith('_') || prop.protected){
+                    if(prop.private)
+                        result.value += '-'
+                    else
+                        result.value += '#'
+                } else
                     result.value += '+'
                 result.value += (prop.const ? 'const' : 'var') + ' ' + prop.decl + '\n'
             }
@@ -138,11 +306,14 @@
                 result.value += '    '
                 if(func.virtual)
                     result.value += '{abstract} '
-                else if(cls.static)
-                    result.value += '{static} '
-                if(func.name.startsWith('_'))
-                    result.value += '-'
-                else
+                //else if(cls.static)
+                //    result.value += '{static} '
+                if(func.name.startsWith('_') || func.protected){
+                    if(func.private)
+                        result.value += '-'
+                    else
+                        result.value += '#'
+                } else
                     result.value += '+'
                 result.value += 'func ' + func.sign + '\n'
             }
@@ -159,7 +330,7 @@
             //delete cls.body
         }
 
-        if(classes.length)
+        if(!firstClass)
             result.value += '}\n\n'
 
         for(let cls of Object.values(classes)){
@@ -179,7 +350,7 @@
                 result.value += cls.name + ' *-- ' + enm.name + '\n'
         }
 
-        result.value += "@enduml"
+        result.value += "\n@enduml"
         
         return classes
     }

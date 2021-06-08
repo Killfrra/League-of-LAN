@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://entities/buildings/inhibitor/inhibitor.tscn" type="PackedScene" id=1]
+[ext_resource path="res://references/LoL_minimap.png" type="Texture" id=2]
+[ext_resource path="res://entities/buildings/nexus/nexus.tscn" type="PackedScene" id=3]
 [ext_resource path="res://entities/buildings/turret/turret.tscn" type="PackedScene" id=4]
-[ext_resource path="res://references/map/LoL_minimap.png" type="Texture" id=5]
 
 [node name="Buildings" type="Node2D"]
 
@@ -10,7 +11,7 @@
 visible = false
 position = Vector2( 7718.75, -7786.55 )
 scale = Vector2( 29.457, 29.457 )
-texture = ExtResource( 5 )
+texture = ExtResource( 2 )
 
 [node name="BlueOuterTurret" parent="." instance=ExtResource( 4 )]
 position = Vector2( 6086.64, -6577.94 )
@@ -23,7 +24,7 @@ team = 1
 health_max = 3600.0
 armor = 55.0
 mr = 55.0
-damage = 170.0
+attack_damage = 170.0
 protects = NodePath("../BlueInhibitorTurret")
 
 [node name="BlueInhibitorTurret" parent="." instance=ExtResource( 4 )]
@@ -32,13 +33,13 @@ team = 1
 health_max = 3300.0
 armor = 70.0
 mr = 70.0
-damage = 170.0
+attack_damage = 170.0
 protects = NodePath("../BlueInhibitor")
 
 [node name="BlueInhibitor" parent="." instance=ExtResource( 1 )]
 position = Vector2( 3269.68, -3268.15 )
 team = 1
-protects = [ NodePath("../BlueNexusTurretTop"), NodePath("../BlueNexusTurretBot") ]
+protects = [ NodePath("../BlueNexusTurretTop"), NodePath("../BlueNexusTurretBot"), NodePath("../BlueNexus") ]
 
 [node name="BlueNexusTurretTop" parent="." instance=ExtResource( 4 )]
 position = Vector2( 1700.25, -2277.03 )
@@ -46,7 +47,8 @@ team = 1
 health_max = 2700.0
 armor = 70.0
 mr = 70.0
-damage = 150.0
+attack_damage = 150.0
+protects = NodePath("../BlueNexus")
 
 [node name="BlueNexusTurretBot" parent="." instance=ExtResource( 4 )]
 position = Vector2( 2160.86, -1786.21 )
@@ -54,7 +56,12 @@ team = 1
 health_max = 2700.0
 armor = 70.0
 mr = 70.0
-damage = 150.0
+attack_damage = 150.0
+protects = NodePath("../BlueNexus")
+
+[node name="BlueNexus" parent="." instance=ExtResource( 3 )]
+position = Vector2( 1499.84, -1625.79 )
+team = 1
 
 [node name="RedOuterTurret" parent="." instance=ExtResource( 4 )]
 position = Vector2( 9398.21, -8828.89 )
@@ -67,7 +74,7 @@ team = 2
 health_max = 3600.0
 armor = 55.0
 mr = 55.0
-damage = 170.0
+attack_damage = 170.0
 protects = NodePath("../RedInhibitorTurret")
 
 [node name="RedInhibitorTurret" parent="." instance=ExtResource( 4 )]
@@ -76,13 +83,13 @@ team = 2
 health_max = 3300.0
 armor = 70.0
 mr = 70.0
-damage = 170.0
+attack_damage = 170.0
 protects = NodePath("../RedInhibitor")
 
 [node name="RedInhibitor" parent="." instance=ExtResource( 1 )]
 position = Vector2( 12226.5, -12254.3 )
 team = 2
-protects = [ NodePath("../RedNexusTurretTop"), NodePath("../RedNexusTurretBot") ]
+protects = [ NodePath("../RedNexusTurretTop"), NodePath("../RedNexusTurretBot"), NodePath("../RedNexus") ]
 
 [node name="RedNexusTurretTop" parent="." instance=ExtResource( 4 )]
 position = Vector2( 13300.3, -13761.5 )
@@ -90,7 +97,8 @@ team = 2
 health_max = 2700.0
 armor = 70.0
 mr = 70.0
-damage = 150.0
+attack_damage = 150.0
+protects = NodePath("../RedNexus")
 
 [node name="RedNexusTurretBot" parent="." instance=ExtResource( 4 )]
 position = Vector2( 13758.9, -13252.5 )
@@ -98,4 +106,9 @@ team = 2
 health_max = 2700.0
 armor = 70.0
 mr = 70.0
-damage = 150.0
+attack_damage = 150.0
+protects = NodePath("../RedNexus")
+
+[node name="RedNexus" parent="." instance=ExtResource( 3 )]
+position = Vector2( 13994.1, -13915.7 )
+team = 2

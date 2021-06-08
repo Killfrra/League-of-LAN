@@ -1,0 +1,1000 @@
+@startuml
+scale 2
+
+class VisionSubArea {
+    -var tracking := true
+    {field} -var parent = get_parent()
+    +var team = null
+    -var tracked_entities := {}
+    -func _ready()
+    +func set_team(to)
+    -func setup_layers()
+    +func get_overlapping_areas()
+    -func _entity_entered(entity)
+    -func _entity_exited(entity)
+    -func on_area_entered(area: Area2D)
+    -func on_area_exited(area: Area2D)
+    -func on_tracked_in_sight(for_team, entity)
+    -func on_tracked_out_of_sight(for_team, entity)
+    -func on_tracked_killed(by, entity)
+}
+
+class ActionBase {
+    #var cost: float
+    -var cooldown: float
+    #var cast_time: float
+    -var remaining_cooldown: float = 0
+    -var remaining_cast_time: float = 0
+    +var caster
+    {abstract} #func set_caster(to)
+    #func put_on_cooldown()
+    -func _process(delta)
+    -func on_cooldown_finished()
+    -func on_cooldown_step()
+    #func can_be_activated()
+    {abstract} +func activate(arg)
+}
+
+class CameraController {
+    -var min_zoom := 0.5
+    -var max_zoom := 2.0
+    -var zoom_factor := 0.1
+    -var zoom_duration := 0.2
+    -var _zoom_level := 1.0
+    -var tween: Tween
+    -func _ready()
+    -func _unhandled_input(event)
+}
+
+class Ground {
+    -func _ready()
+    -func on_mouse_entered()
+    -func on_mouse_exited()
+    -func _input_event(viewport: Object, event: InputEvent, shape_idx: int)
+}
+
+class VisionArea {
+    {field} -var parent = get_parent()
+    -var tracked_seen := {}
+    -func _ready()
+    -func on_area_entered(area: Area2D)
+    -func on_area_exited(area: Area2D)
+    -func _on_parent_moved()
+    -func _check_visibility(target)
+}
+
+class Moving {
+    -const DISTANCE_DELTA := 35 
+    #var base_movement_speed: float = 330.0
+    +var movement_speed: float
+    -var movement_speed_addition := 0.0
+    +var movement_speed_multiplier := 1.0
+    {field} +var body = get_node(body) as RigidBody2D
+    -var navmesh: Navigation2D = $"/root/Control/Map/Navigation2D" 
+    -var path: PoolVector2Array
+    +var movement_disallowed := 0
+    #var prev_pos := global_position
+    {abstract} +func is_class(name: String)
+    {abstract} #func _pre_ready()
+    +func recalculate_speed()
+    {abstract} #func generate_variable_attributes()
+    {abstract} #func _ready()
+    {abstract} +func set_target(to)
+    #func on_target_moved(which)
+    #func on_target_is_out_of_sight(team_for)
+    -func get_target_position()
+    -func recalculate_path()
+    -func _integrate_forces(state: Physics2DDirectBodyState)
+    {abstract} #func _physics_process(_delta)
+}
+
+class Events {
+    +var selection_state = SelectionState.None
+    +var mouse_click_made := false
+    +var mouse_buttton_flags := 0
+    -var clicked_objects := []
+    +var click_pos: Vector2
+    +func is_left_mouse_keyup(event: InputEvent)
+    +func is_mouse_keyup(event: InputEvent)
+    +func button2bit(button_index)
+    +func process_event(obj, event)
+    -func _process(delta)
+}
+enum SelectionState {
+     None
+    Position
+    Entity 
+}
+
+class Effect {
+    #var _duration: float = INF
+    -var _stacks := -1
+    #var applied_to
+    {abstract} #func get_name()
+    +func apply(to)
+    {abstract} #func _apply(to)
+    {abstract} #func _stack(with)
+    {abstract} #func _dispel()
+}
+
+class EffectIcon {
+    -var progress_bar
+    -var progress_bar_node
+    -var stacks_label
+    -var stacks_label_node
+    -var _data
+    -var _duration_left
+    -func _ready()
+    +func init(data)
+    -func _process(delta)
+}
+
+class Avatar {
+    +var id
+    +var team
+    +var avatar_owner
+    -var positions := []
+    -func unpack(dict)
+    {abstract} +func init(initials)
+    +func unhide(data)
+    +func hide()
+    -func set_remote(key, value)
+    +func destroy_remote(when)
+    +func interpolate_position(server_time, to)
+    {abstract} #func _process(delta)
+}
+
+class Damagable {
+    #const SIZE_MULTIPLIER := 1.0
+    +var invulnerable := 0
+    +var untargetable := 0
+    +var health
+    +var health_max := 526.0
+    +var health_regen := 5.5
+    +var armor := 20.88
+    +var mr := 30.0
+    #var granted_exp := 32.0
+    #var granted_gold := 14
+    +var gameplay_radius: float
+    {abstract} #func generate_variable_attributes()
+    {abstract} #func _pre_ready()
+    {abstract} #func _ready()
+    -func calc_damage(resist)
+    +func take_damage(from, true_d, magic_d, physic_d)
+    {abstract} #func grant_gold_and_exp(to)
+    {abstract} #func killed_by(killer)
+    {abstract} #func damaged_by(killer)
+    {abstract} #func _physics_process(delta)
+    {abstract} #func fully_restored()
+}
+
+class Autoattacking {
+    +var attack_damage: float
+    +var attack_speed: float
+    -var bullet_prefab: PackedScene
+    +var attack_range := 550.0
+    +var target = null
+    +var target_locked := false
+    -var target_score: float
+    -var target_in_range := false
+    #var reload_timer: Timer
+    -var ready_to_fire := true
+    +var acquisition_area: VisionSubArea
+    +var attacking_disallowed := 0
+    {abstract} #func generate_variable_attributes()
+    {abstract} #func _ready()
+    #func check_if_target_in_attack_range()
+    #func strict_equality(a, b)
+    -func connect_signals_to_target()
+    -func disconnect_signals_from_target()
+    {abstract} +func set_target(to)
+    {abstract} #func on_autoacquisition_area_entered(entity)
+    {abstract} #func on_autoacquisition_area_exited(entity)
+    {abstract} #func on_enemy_hit_smth(what, who)
+    {abstract} #func on_target_moved(which)
+    {abstract} #func on_target_killed_by(killer)
+    {abstract} #func on_target_is_out_of_sight(team_from)
+    -func _targetable(candidate)
+    {abstract} +func try_to_find_target_in_area(search_area: VisionSubArea)
+    {abstract} #func calc_priority(candidate: Node2D, victim = null)
+    {abstract} #func killed_by(killer)
+    -func on_ready_to_fire()
+    {abstract} #func fire()
+    #func fire_if_possible()
+}
+
+class AvatarSpawner {
+    -var unique_counter := -1
+    -var cached := {}
+    -func get_unique_name()
+    +func spawn_avatar_remotely(path: String, name: String, initial_data)
+}
+
+class SpawnManager {
+    -var buildings_prefab: PackedScene
+    {field} -var monster_spawn = get_node(monster_spawn)
+    {field} -var wave_spawn_timer := Timer.new()
+    {field} -var individual_minion_spawn_timer := Timer.new()
+    -var sec_between_waves := 30
+    {field} -var team1_spawn = get_node(team1_spawn)
+    {field} -var team2_spawn = get_node(team2_spawn)
+    +var team_spawn := [ null, team1_spawn, team2_spawn ]
+    -var summoned_champion
+    -var melee_minion_prefab: PackedScene
+    -var caster_minion_prefab: PackedScene
+    {field} -var top_line = get_node(top_line) as Line2D
+    {field} -var top_line_reverse := duplicate_and_reverse_line(top_line)
+    {field} -var mid_line = get_node(mid_line) as Line2D
+    {field} -var mid_line_reverse := duplicate_and_reverse_line(mid_line)
+    {field} -var bot_line = get_node(bot_line) as Line2D
+    {field} -var bot_line_reverse := duplicate_and_reverse_line(bot_line)
+    -var lines_left_to_spawn := 0
+    -var minions_in_wave := 6
+    -func _ready()
+    -func add_node_with_name_to(node, name)
+    -func on_Game_spawn(team_choices)
+    -func spawn_champions(team_choices)
+    -func begin_spawning_minion_waves()
+    -func duplicate_and_reverse_line(line: Line2D) -> Line2D
+    -func spawn_minion_wave()
+    -func spawn_minions_on_lane(line, reverse_line)
+    -func spawn_minion(line, team, prefab)
+    -func on_game_ended(_winner_team)
+}
+
+class GameUI {
+    {field} -var shared_panel = get_node(shared_panel)
+    {field} +var kda_label = get_node(kda_label)
+    {field} +var cs_label = get_node(cs_label)
+    {field} -var time_label = get_node(time_label)
+    {field} -var fps_label = get_node(fps_label)
+    {field} -var ping_label = get_node(ping_label)
+    -var ticker
+    {field} -var camera = get_node(camera)
+    -func _ready()
+    -func on_Game_spawn(team_choices)
+    -func update_clock()
+    -func _process(delta)
+    -func on_game_ended(winner_team)
+    -func on_continue_button_down()
+}
+
+class Action {
+    -var _name: String
+    -var cost: float
+    -var cooldown: float
+    -var cast_time: float
+    -var remaining_cooldown: float = 0
+    -var remaining_cast_time: float = 0
+    -var charges := 1
+    -var time_between_recasts := 1.0
+    -var activation_time := 0.0
+    -var channeling_time := 0.0
+    -var remaining_time_between_recasts := 0.0
+    -var remaining_activation_time := 0
+    +var caster
+    {field} -var icon = get_node(icon)
+    {field} -var cooldown_bar = get_node(cooldown_bar)
+    {field} -var cooldown_label = get_node(cooldown_label)
+    {field} -var cost_label = get_node(cost_label) if cost_label else null
+    {field} -var blast_zone = get_node(blast_zone) if blast_zone else null
+    {field} -var cast_bar = get_node(cast_bar) if cast_bar else null
+    {field} -var cast_label = get_node(cast_label) if cast_label else null
+    {field} -var charges_label = get_node(charges_label) if charges_label else null
+    {field} -var activation_bar = get_node(activation_bar) if activation_bar else null
+    -var key = KeyList.Q
+    -var requires
+    -var low_on_mana = false
+    {field} -var original_texture = (icon as TextureRect).texture
+    -func _ready()
+    -func on_caster_mana_changed(to)
+    -func begin_casting()
+    -func put_on_cooldown()
+    -func _process(delta)
+    -func can_be_activated()
+    -func _input(event: InputEvent)
+    +func activate(arg = null)
+    -func on_casting_finished()
+}
+enum KeyList {
+     Q = KEY_Q
+    W = KEY_W
+    E = KEY_E
+    R = KEY_R
+    D = KEY_D
+    F = KEY_F
+    _4 = KEY_4
+    B = KEY_B
+    
+}
+enum Requires {
+     None
+    Position
+    Direction 
+}
+
+class AvatarOwner {
+    +var team
+    +var seen_by_teams := [0, 0, 0]
+    #var seen_by_num = seen_by_teams[0] + seen_by_teams[1] + seen_by_teams[2]
+    +var effects := {}
+    +var id = null 
+    -var avatar_prefab
+    +var avatar
+    -var spawned_on_team_computers := [ true, false, false ]
+    #var var_attrs
+    {abstract} +func on_seen_by(entity)
+    {abstract} +func on_unseen_by(entity)
+    +func should_sync_to_client(client)
+    {abstract} #func generate_variable_attributes()
+    -func _init()
+    {abstract} #func _ready()
+    {abstract} #func _pre_ready()
+    -func spawn_avatar_remotely_id(id, initials)
+    -func add_to_package(pkg, access_rights, initial = false)
+    #func sync_opponent(opponent_team)
+    -func unsync_opponent(opponent_team)
+    +func sync_set(key, value = null)
+    +func sync_position()
+    +func destroy_self()
+}
+
+class MovingAvatar {
+    +var movement_speed := 0.0
+}
+
+class AutoattackingAvatar {
+    +var attack_damage := 0.0
+    +var attack_speed := 0.0
+}
+
+class DamagableAvatar {
+    {field} #var healthbar = get_node(healthbar)
+    +var health := 0.0
+    +var health_max := 0.0
+    +var health_regen := 0.0
+    +var armor := 0.0
+    +var mr := 0.0
+    -var stat_connections := {}
+    -var last_group_id := -1
+    #var floating_panel_connections_group
+    +var effects := {}
+    +func create_new_group()
+    +func connect_stat(group, stat_name, obj, func_name, binds := [])
+    +func disconnect_group(group)
+    #func emit_stat(stat_name, new_value)
+    {abstract} +func init(initials)
+    -func on_mouse_input(viewport: Object, event: InputEvent, shape_idx: int)
+    #func should_disable_light()
+    #func should_change_color()
+    +func apply_effect(name, at_time, duration, stacks)
+    +func set_effect_duration(name, duration)
+    +func set_effect_stacks(name, stacks)
+    +func dispel_effect(name)
+    +func remove_outdated_effects()
+}
+
+class LobbyUI_Page1_Login {
+    -func _on_Enter_pressed()
+    -func _on_Username_text_entered(new_text: String)
+}
+
+class LobbyUI_Page2_ConnectOrHostGame {
+    {field} -var hostIP_field = get_node(hostIP_field)		 
+    {field} -var game_name_field = get_node(game_name_field) 
+    {field} -var team_size_field = get_node(team_size_field) 
+    -func _ready()
+    -func _on_Game_logged_in(username)
+    -func _on_Connect_pressed()
+    -func _on_Create_pressed()
+}
+
+class LobbyUI_Page3_JoinTeam {
+    {field} -var game_name_label = get_node(game_name_label) 
+    {field} -var map_size_type_label = get_node(map_size_type_label) 
+    {field} -var team1_list = get_node(team1_list) 
+    {field} -var team2_list = get_node(team2_list) 
+    {field} -var ip_addr_label = get_node(ip_addr_label) 
+    {field} -var spectators_list = get_node(spectators_list) 
+    {field} -var no_spectators_label = spectators_list.get_node("NoSpectators") 
+    {field} -var watch_button = get_node(watch_button) 
+    {field} -var start_button = get_node(start_button) 
+    -var player_template: Node
+    -var team1_empty: Node
+    -var team2_empty: Node
+    -var spectators_list_indeces := []
+    -func _ready()
+    -func _on_Game_connected()
+    -func add_player_to_list(player)
+    -func remove_player_from_list(player)
+    -func update_buttons()
+    -func _on_Join_pressed(team)
+    -func _on_Game_joined(player: Dictionary)
+    -func _on_Game_switched(player_id: int, team_from, team_to)
+    -func _on_Game_leaved(player: Dictionary)
+    -func _on_Start_pressed()
+}
+
+class LobbyUI_PageSwitcher {
+    -var children: Array
+    -func _ready()
+    +func enable_step(num: int)
+}
+
+class Lobby {
+    -const SERVER_PORT := 10567 
+    -const SERVER_MAX_CLIENTS := 4095
+    -var username: String
+    +var local_client: Dictionary
+    -var last_used_runes_and_spells := [ Types.Rune.Sorcery, Types.Spell.Heal, Types.Spell.Flash
+    -var team_choices = { Types.Team.Team1: {}, Types.Team.Team2: {}, Types.Team.Spectators: {} }
+    -var my_team_choices
+    +var players_ready = 0
+    +const opposite_team := { Types.Team.Team1 : Types.Team.Team2, Types.Team.Team2 : Types.Team.Team1, Types.Team.Spectators: Types.Peer.Player }
+    +const sec_to_server_time_mul := 1000000
+    -const max_interpolation_delay := 0.2 * sec_to_server_time_mul
+    +var server_time_offset = 0
+    +var interpolation_delay = 0 
+    -var max_round_trip_time := 0
+    +var current_time := 0.0
+    -func _ready()
+    +func login(uname)
+    +func connect_to(server_ip: String)
+    +func host(game_name: String, team_size: int, map, type)
+    -func _on_network_peer_connected(id: int)
+    -func connected(info)
+    -func error(e: String)
+    +func join(team)
+    -func proc_join_req(team, uname: String)
+    -func joined(client)
+    -func proc_switching_req(team)
+    -func switched(id: int, team)
+    +func start()
+    -func started(team_preliminary_choices)
+    +func set_rune(rune)
+    -func proc_set_rune_req(rune)
+    -func set_spell(spell, right: bool)
+    -func proc_set_spell_req(spell, right)
+    -func spell_set(id, spell, right)
+    +func set_ready()
+    -func proc_set_ready_req()
+    -func player_ready(id)
+    -func final_countdown(sec: int)
+    -func loading_screen(opposite_team_choices)
+    -func sync_time()
+    -func proc_time_req()
+    -func handle_time_resp(player_time)
+    +func get_server_time_with_interpolation_offset()
+    -func adjust_time_and_spawn(serv_time_off, interp_delay)
+    +func get_ip()
+    +func get_ticks_usec()
+    +func get_ticks_msec()
+    -func _physics_process(delta)
+    +func end_game(winner_team)
+    -func game_ended(winner_team, missing_info)
+}
+
+class LobbyUI_Page4_SelectRunes {
+    {field} -var left_player_list = get_node(left_player_list) 
+    {field} -var right_player_list = get_node(right_player_list) 
+    {field} -var lockin_button = get_node(lockin_button) 
+    {field} -var runes_list = get_node(runes_list) 
+    {field} -var player_only_stuff = get_node(player_only_stuff) 
+    -var left_list_template
+    -var right_list_template
+    -func _ready()
+    -func left_or_right(team)
+    -func on_Game_started(my_team_choices)
+    -func on_Runes_item_selected(idx: int)
+    -func on_LockIn_pressed()
+    -func on_Game_player_ready(id)
+}
+
+class Types {
+    +const map2str = { Map.SummonersRift: "Summoner's rift", Map.HowlingAbyss: "Howling abyss" }
+    +const type2str = { Type.BlindPick: "blind pick", Type.DraftPick: "draft pick" }
+    +const rune2str = { Rune.Inspiration: "Inspiration", Rune.Precision: "Precision", Rune.Domination: "Domination", Rune.Resolve: "Resolve", Rune.Sorcery: "Sorcery" }
+    +const champ2str = { Champion.Godotte: "Godotte" }
+    +const team2vision_layers = { Team.Team1: 2, Team.Team2: 4, Team.Spectators: 2 + 4 }
+    +const team2gameplay_layers = { Team.Team1: 8, Team.Team2: 16, Team.Spectators: 8 + 16 }
+    +const team2vision_blocking_layer = { Team.Team1: 32, Team.Team2: 64, Team.Spectators: 32 + 64 }
+    +const champion_layer = { Team.Team1: 128, Team.Team2: 256 }
+}
+enum Peer {
+     Spectator
+    Team1
+    Team2
+    Player
+    Client
+    Team1_and_Spectators
+    Team2_and_Spectators 
+}
+enum Team {
+     Spectators
+    Team1
+    Team2 
+}
+enum Map {
+     SummonersRift
+    HowlingAbyss 
+}
+enum Type {
+     BlindPick
+    DraftPick  
+}
+enum Spell {
+     Heal
+    Ghost
+    Barrier
+    Exhaust
+    Mark
+    Clarity
+    Flash
+    Teleport
+    Smite
+    Cleanse
+    Ignite 
+}
+enum Rune {
+     Inspiration
+    Precision
+    Domination
+    Resolve
+    Sorcery 
+}
+enum Champion {
+     Godotte 
+}
+
+class Game {
+    +var game_name: String
+    +var map
+    +var team_size: int
+    +var type
+    +var start_time
+    +var lists := {}
+    +var clients
+    +var spectators
+    +var players
+    +var team1
+    +var team2
+    -var team1_and_spec
+    -var team2_and_spec
+    -func _enter_tree()
+    +func create_peer(id, team, username)
+    +func add_peer_to_lists(peer)
+    -func remove_peer_from_lists(id)
+    +func switch_peer_team(id, new_team)
+    -func copy_keys(to_dict: Dictionary, from_dict: Dictionary, keys: Array)
+    +func serialize_room_info()
+    +func deserialize_room_info(dict)
+}
+
+class InhibitorAvatar {
+    +func init(data)
+}
+
+class Inhibitor {
+    -var protects
+    -var protected_nodes := []
+    #func _ready()
+    #func killed_by(killer)
+    #func fully_restored()
+}
+
+class TurretAvatar {
+    {field} -var turret = get_node(turret)
+    -var tween: Tween
+    +var target
+    -func _ready()
+    +func init(data)
+    +func head_to(to, time_to_fire)
+    -func remote_head_to(to, time_to_fire)
+    #func _process(delta)
+}
+
+class Turret {
+    -var vision_radius
+    {field} -var protects = get_node(protects) if protects else null 
+    #func _ready()
+    +func on_seen_by(entity)
+    +func on_unseen_by(entity)
+    #func killed_by(killer)
+    +func set_target(to)
+    #func calc_priority(candidate: Node2D, victim = null)
+}
+
+class Nexus {
+    #func killed_by(killer)
+}
+
+class BulletAvatar {
+}
+
+class Bullet {
+    -const SIZE_MULTIPLIER := 1.0
+    -var true_damage := 0
+    +var magic_damage := 0
+    +var physic_damage := 0
+    -var speed := 1200
+    +var sender: Node2D
+    +var target: Damagable
+    +var first_frame := true
+    #func _ready()
+    -func _physics_process(delta: float)
+}
+
+class Class35 {
+    +var sender: Player
+    +var target: Vector2
+    +var damage
+    -var speed := 1550.0
+    +var first_frame := true
+    #func _ready()
+    -func _physics_process(delta: float)
+    -func on_effect_area_entered(area: Area2D)
+}
+
+class CharmEffect {
+    -var _caster
+    #var _slowdown
+    -var timer
+    -var target_before_charm
+    -var attack_range_before_charm
+    -func _init(caster, duration, slowdown)
+    #func get_name()
+    #func _apply(to)
+    #func _stack(with)
+    #func _dispel()
+}
+
+class GodotteE {
+    -var kiss_prefab: PackedScene
+    +func activate(dir)
+}
+
+class Class38 {
+    +var sender: Player
+    +var target: Vector2
+    +var damage
+    -var returning := false
+    -var speed := 1550.0
+    +var first_frame := true
+    #func _ready()
+    -func _physics_process(delta: float)
+    -func on_effect_area_entered(area: Area2D)
+}
+
+class GodotteQ {
+    -var orb_prefab: PackedScene
+    +func activate(dir)
+}
+
+class Class40 {
+    {field} -var flame_spawn_points := [ NodePath("Flame1"), NodePath("Flame2"), NodePath("Flame3") ]
+    -var flame_prefab: PackedScene
+    -var flames := []
+    +var sender: Player
+    +var damage: float
+    +var additional_damage: float
+    {field} -var tween := Tween.new()
+    -var should_destroy := false
+    -var targets = []
+    -func _ready()
+    -func on_destroy_timer_timeout()
+    -func _physics_process(delta)
+    -func release_flame(flame_sp, flame, target)
+    -func on_tween_completed(object: Object, key: NodePath)
+    -func safely_targetable(candidate)
+    -func on_flame_acquisition_area_entered(target, acquisition_area, flame, flame_sp)
+    -func try_to_find_priority_target()
+    -func try_to_find_nearest_target(search_area)
+}
+
+class GodotteW {
+    -var flames_prefab: PackedScene
+    {field} -var fox_fire_area = get_node(fox_fire_area)
+    #func set_caster(to)
+    +func activate(_arg)
+}
+
+class RBase {
+    +var caster
+    #var cost := 100.0
+    #var cooldown := 130
+    #var charges := 3
+    #var recast_cooldown := 1.0
+    #var activation := 10.0
+    -var state = State.Ready
+    #var time_passed_scince_activation := 0.0
+    #var time_passed_scince_recast := 0.0
+    #var remaining_casts: int
+    #func can_be_activated()
+    +func activate(arg = null)
+    {abstract} #func _activate(arg = null)
+    -func _process(delta)
+    {abstract} #func _recast_enable()
+    {abstract} #func _recast_update()
+    {abstract} #func _recast_disable()
+    {abstract} #func _active_enable()
+    {abstract} #func _active_update()
+    {abstract} #func _active_disable()
+    {abstract} #func _cooldown_enable()
+    {abstract} #func _cooldown_update()
+    {abstract} #func _cooldown_disable()
+}
+enum State {
+     Ready
+    BetweenRecasts
+    Active
+    Cooldown
+    
+}
+
+class RButton {
+    {field} -var icon = get_node(icon)
+    {field} -var cooldown_bar = get_node(cooldown_bar)
+    {field} -var cooldown_label = get_node(cooldown_label)
+    {field} -var cost_label = get_node(cost_label)
+    {field} -var charges_label = get_node(charges_label)
+    {field} -var activation_bar = get_node(activation_bar)
+    -func _ready()
+    -func _input(event: InputEvent)
+    #func _activate(arg = null)
+    #func _recast_enable()
+    #func _recast_update()
+    #func _recast_disable()
+    #func _active_enable()
+    #func _active_update()
+    #func _active_disable()
+    #func _cooldown_enable()
+    #func _cooldown_update()
+    #func _cooldown_disable()
+}
+
+class HealSpell {
+    +func activate(_arg)
+}
+
+class StatsPanel {
+    {field} -var health_bar = get_node(health_bar)
+    {field} -var mana_bar = get_node(mana_bar)
+    -var stats_container
+    {field} +var stats = get_node(stats_container).get_children()
+    {field} -var level_label = get_node(level_label)
+    {field} +var kda_label = get_node(kda_label) if kda_label else null
+    {field} +var cs_label = get_node(cs_label) if cs_label else null
+    {field} -var effect_template = get_node(effect_template)
+    {field} -var buff_container = get_node(buff_container)
+    {field} -var debuff_container = get_node(debuff_container)
+    -var attached_to
+    +var connections_group
+    {field} -var effect_icons = { "heal_buff": preload("res://icons/speedometer.png"), "heal_debuff": preload("res://icons/health-decrease.png"), "charm_debuff": preload("res://icons/charm.png"), }
+    +var effects := {} 
+    -func _ready()
+    +func attach(to)
+    -func on_observed_destroyed()
+    -func update_kda(_v)
+    -func set_stat_by_id(new_value, id)
+    -func add_effect(data)
+    -func remove_effect(name)
+    -func deattach()
+    -func clear_effects()
+}
+
+class Player {
+    +var mana
+    +var mana_max: float = 418.0
+    +var mana_regen: float = 8.0
+    +var ability_power := 9.0
+    +var ability_haste := 0.0
+    +var stacks
+    -var crit_damage := 1.75
+    +var strike_chance := 0.0
+    +var casting_disallowed := 0
+    +var level_int := 1
+    +var level_frac
+    -var exp_to_next_level := 280
+    +var expirience := 0.0
+    +var gold := 500.0
+    +var creep_score := 0
+    +var kills := 0
+    +var deaths := 0
+    +var assists := 0
+    -var vision_radius: float = $SightRadius/CollisionShape2D.shape.radius
+    -var totem_prefab: PackedScene
+    +var spawn_manager
+    +var casting := false
+    +var target_of_last_autoattack: Damagable
+    +var was_attacked_in_time: int
+    +func is_class(name: String)
+    -func level_up_stats()
+    #func generate_variable_attributes()
+    #func _pre_ready()
+    #func _ready()
+    #func _physics_process(delta)
+    +func lock_target(to)
+    +func activate(action, arg)
+    -func spawn_totem(pos)
+    #func killed_by(killer)
+    #func calc_priority(candidate, victium=null)
+    #func fire()
+}
+
+class PlayerAvatar {
+    -var player_info
+    +var mana := 0.0
+    +var mana_max := 0.0
+    +var mana_regen := 0.0
+    +var strike_chance := 0.0
+    +var ability_power := 0.0
+    +var ability_haste := 0.0
+    +var level_int := 1
+    +var level_frac := 0.0
+    +var gold := 0.0
+    +var kills := 0
+    +var deaths := 0
+    +var assists := 0
+    +var creep_score := 0.0
+    -var manabar := $Bars/Panel/ManaBar
+    -var game_ui: GameUI
+    {field} -var panel = get_node(panel)
+    {field} -var exp_bar = get_node(exp_bar)
+    {field} -var gold_button = get_node(gold_button)
+    -var ability_paths
+    -var abilities = {}
+    -func sender_is_owner()
+    -func _ready()
+    +func init(data)
+    -func update_gold(to)
+    -func on_target_set(target)
+    +func set_target(to)
+    #func _process(delta)
+    +func activate(action, arg)
+    -func proc_activate_req(action, arg)
+}
+
+class MeleeMinon {
+    -var sleeping := true
+    -var radio_silence := true
+    +func is_class(name: String)
+    #func _ready()
+    #func on_autoacquisition_area_entered(entity)
+    #func on_autoacquisition_area_exited(entity)
+    #func on_enemy_hit_smth(what, who)
+    #func on_target_killed_by(killer)
+    +func set_target(to)
+    -func wake_up(_entity = null)
+    #func calc_priority(candidate, vicium = null)
+}
+
+class MinionAvatar {
+    +func init(data)
+}
+
+class Minion {
+    +var lane_line: Line2D
+    -var vision_radius
+    +var selected_as_target_by_num_of_minions := 0
+    -var reward_radius: CircleShape2D
+    {abstract} +func is_class(name: String)
+    {abstract} #func _ready()
+    {abstract} +func set_target(to)
+    {abstract} #func calc_priority(candidate: Node2D, victim = null)
+    #func grant_gold_and_exp(to)
+}
+
+class Monster {
+    -var base_location := global_position
+    -var patience := 6
+    -var distance_traveled := 0.0
+    -var patience_tick_timer: Timer
+    +func is_class(name: String)
+    #func _ready()
+    #func damaged_by(damager)
+    -func decrease_patience(amount)
+    +func try_to_find_target_in_area(area)
+    -func on_moved()
+    -func head_home()
+    -func on_damaging_target(_target)
+}
+
+class MonsterAvatar {
+}
+
+class Totem {
+}
+
+class TotemAvatar {
+    +func init(data)
+}
+
+class HealBuff {
+    #var _heal_amount = 90
+    -var timer: SceneTreeTimer
+    #func get_name()
+    -func _init(heal_amount)
+    #func _apply(to)
+    #func _stack(with)
+    -func apply_or_stack(with)
+    #func _dispel()
+}
+
+class HealDebuff {
+    -var timer: SceneTreeTimer
+    #func get_name()
+    -func _init()
+    #func _apply(to)
+    #func _stack(with)
+}
+
+Area2D <|-- VisionSubArea
+CanvasItem <|-- ActionBase
+Camera2D <|-- CameraController
+Area2D <|-- Ground
+Area2D <|-- VisionArea
+Autoattacking <|-- Moving
+Node <|-- Events
+Reference <|-- Effect
+TextureRect <|-- EffectIcon
+Node2D <|-- Avatar
+AvatarOwner <|-- Damagable
+Damagable <|-- Autoattacking
+Node <|-- AvatarSpawner
+Node <|-- SpawnManager
+Control <|-- GameUI
+CanvasItem <|-- Action
+Node2D <|-- AvatarOwner
+AutoattackingAvatar <|-- MovingAvatar
+DamagableAvatar <|-- AutoattackingAvatar
+Avatar <|-- DamagableAvatar
+Control <|-- LobbyUI_Page1_Login
+Control <|-- LobbyUI_Page2_ConnectOrHostGame
+Control <|-- LobbyUI_Page3_JoinTeam
+Control <|-- LobbyUI_PageSwitcher
+Node <|-- Lobby
+Control <|-- LobbyUI_Page4_SelectRunes
+Node <|-- Types
+Node <|-- Game
+DamagableAvatar <|-- InhibitorAvatar
+Damagable <|-- Inhibitor
+AutoattackingAvatar <|-- TurretAvatar
+Autoattacking <|-- Turret
+Damagable <|-- Nexus
+Avatar <|-- BulletAvatar
+AvatarOwner <|-- Bullet
+AvatarOwner <|-- Class35
+Effect <|-- CharmEffect
+ActionBase <|-- GodotteE
+AvatarOwner <|-- Class38
+ActionBase <|-- GodotteQ
+Node2D <|-- Class40
+ActionBase <|-- GodotteW
+CanvasItem <|-- RBase
+RBase <|-- RButton
+ActionBase <|-- HealSpell
+CanvasItem <|-- StatsPanel
+Moving <|-- Player
+MovingAvatar <|-- PlayerAvatar
+Minion <|-- MeleeMinon
+MovingAvatar <|-- MinionAvatar
+Moving <|-- Minion
+Moving <|-- Monster
+MovingAvatar <|-- MonsterAvatar
+Damagable <|-- Totem
+DamagableAvatar <|-- TotemAvatar
+Effect <|-- HealBuff
+Effect <|-- HealDebuff
+Events *-- SelectionState
+Action *-- KeyList
+Action *-- Requires
+Types *-- Peer
+Types *-- Team
+Types *-- Map
+Types *-- Type
+Types *-- Spell
+Types *-- Rune
+Types *-- Champion
+RBase *-- State
+
+@enduml

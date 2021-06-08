@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://entities/buildings/inhibitor/inhibitor_avatar.gd" type="Script" id=1]
+[ext_resource path="res://sprites/towerDefense_tile181.png" type="Texture" id=2]
+[ext_resource path="res://sprites/towerDefense_tile128.png" type="Texture" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 437.5
+
+[node name="NexusAvatar" type="Node2D"]
+position = Vector2( 3778.83, -3883.16 )
+script = ExtResource( 1 )
+healthbar = NodePath("HealthBar/ProgressBar")
+
+[node name="Base" type="Sprite" parent="."]
+scale = Vector2( 6, 6 )
+texture = ExtResource( 3 )
+
+[node name="Crystal" type="Sprite" parent="."]
+self_modulate = Color( 0.33, 0.33, 1, 1 )
+rotation = 0.785398
+scale = Vector2( 2, 2 )
+texture = ExtResource( 2 )
+
+[node name="SelectionRadius" type="Area2D" parent="."]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionRadius"]
+shape = SubResource( 1 )
+
+[node name="HealthBar" type="Node2D" parent="."]
+z_index = 7
+
+[node name="ProgressBar" type="ProgressBar" parent="HealthBar"]
+margin_left = -104.0
+margin_top = -15.5
+margin_right = 104.0
+margin_bottom = 13.5
+mouse_filter = 2
+value = 100.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}

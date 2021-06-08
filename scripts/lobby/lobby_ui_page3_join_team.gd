@@ -1,5 +1,5 @@
 class_name LobbyUI_Page3_JoinTeam
-extends Panel
+extends Control
 
 export(NodePath) onready var game_name_label = get_node(game_name_label) #as Label
 export(NodePath) onready var map_size_type_label = get_node(map_size_type_label) #as Label

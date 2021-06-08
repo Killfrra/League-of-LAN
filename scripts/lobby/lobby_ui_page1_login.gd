@@ -1,5 +1,5 @@
 class_name LobbyUI_Page1_Login
-extends Panel
+extends Control
 
 func _on_Enter_pressed():
 	var text: String = $Username.text

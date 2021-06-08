@@ -1,5 +1,5 @@
 class_name LobbyUI_Page2_ConnectOrHostGame
-extends TabContainer
+extends Control
 
 export(NodePath) onready var hostIP_field = get_node(hostIP_field)		 #as LineEdit
 export(NodePath) onready var game_name_field = get_node(game_name_field) #as LineEdit

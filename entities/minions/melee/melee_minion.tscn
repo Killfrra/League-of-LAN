@@ -1,25 +1,26 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://entities/minions/melee/melee_minion.gd" type="Script" id=1]
-[ext_resource path="res://scripts/game/vision_area.gd" type="Script" id=2]
+[ext_resource path="res://scripts/game/sight_area.gd" type="Script" id=2]
 [ext_resource path="res://entities/minions/minion_avatar.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scripts/game/acquisition_area.gd" type="Script" id=4]
 
-[sub_resource type="PhysicsMaterial" id=8]
+[sub_resource type="PhysicsMaterial" id=1]
 friction = 0.0
 
-[sub_resource type="CircleShape2D" id=9]
+[sub_resource type="CircleShape2D" id=2]
 radius = 31.5
 
-[sub_resource type="CircleShape2D" id=10]
+[sub_resource type="CircleShape2D" id=3]
 radius = 34.0
 
-[sub_resource type="CircleShape2D" id=11]
+[sub_resource type="CircleShape2D" id=4]
 radius = 327.0
 
-[sub_resource type="CircleShape2D" id=12]
+[sub_resource type="CircleShape2D" id=5]
 radius = 525.0
 
-[sub_resource type="CircleShape2D" id=13]
+[sub_resource type="CircleShape2D" id=6]
 radius = 702.0
 
 [sub_resource type="CircleShape2D" id=7]
@@ -27,7 +28,7 @@ radius = 1200.0
 
 [node name="MeleeMinion" type="RigidBody2D"]
 mode = 2
-physics_material_override = SubResource( 8 )
+physics_material_override = SubResource( 1 )
 gravity_scale = 0.0
 linear_damp = 0.0
 script = ExtResource( 1 )
@@ -36,42 +37,46 @@ health_max = 477.0
 health_regen = 0.0
 armor = 0.0
 mr = 0.0
-damage = 12.0
+attack_damage = 12.0
 attack_speed = 1.25
 attack_range = 47.0
-move_speed = 325.0
+base_movement_speed = 325.0
 body = NodePath(".")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 9 )
+shape = SubResource( 2 )
 
 [node name="GameplayRadius" type="Area2D" parent="."]
 input_pickable = false
 monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GameplayRadius"]
-shape = SubResource( 10 )
+shape = SubResource( 3 )
 
 [node name="WakeUpRadius" type="Area2D" parent="."]
 input_pickable = false
 monitorable = false
+script = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WakeUpRadius"]
-shape = SubResource( 11 )
+shape = SubResource( 4 )
 
 [node name="AcquisitionRadius" type="Area2D" parent="."]
 input_pickable = false
 monitorable = false
+script = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AcquisitionRadius"]
-shape = SubResource( 12 )
+shape = SubResource( 5 )
 
 [node name="FirstAcquisitionRadius" type="Area2D" parent="."]
 input_pickable = false
 monitorable = false
+script = ExtResource( 4 )
+tracking = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FirstAcquisitionRadius"]
-shape = SubResource( 13 )
+shape = SubResource( 6 )
 
 [node name="SightRadius" type="Area2D" parent="."]
 input_pickable = false

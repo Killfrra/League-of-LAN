@@ -23,10 +23,10 @@ health_max = 2100.0
 health_regen = 0.0
 armor = 10.0
 mr = -15.0
-damage = 82.0
+attack_damage = 82.0
 attack_speed = 0.493
 attack_range = 50.0
-move_speed = 180.0
+base_movement_speed = 180.0
 body = NodePath(".")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

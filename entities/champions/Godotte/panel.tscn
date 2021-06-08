@@ -1,0 +1,1429 @@
+[gd_scene load_steps=26 format=2]
+
+[ext_resource path="res://rounded_square.png" type="Texture" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://scripts/game/action_button.gd" type="Script" id=3]
+[ext_resource path="res://sprites/icon_border.png" type="Texture" id=4]
+[ext_resource path="res://references/vlcsnap-2021-05-25-22h31m02s823.png" type="Texture" id=5]
+[ext_resource path="res://entities/champions/panel.gd" type="Script" id=6]
+[ext_resource path="res://stat_bar.gd" type="Script" id=7]
+[ext_resource path="res://entities/champions/Godotte/images/icon.png" type="Texture" id=8]
+[ext_resource path="res://scripts/game/effect_icon.gd" type="Script" id=9]
+[ext_resource path="res://entities/champions/Godotte/R/r_button.gd" type="Script" id=10]
+[ext_resource path="res://icons/wingfoot.png" type="Texture" id=11]
+[ext_resource path="res://icons/sands-of-time.png" type="Texture" id=12]
+[ext_resource path="res://icons/unused/morph-ball.png" type="Texture" id=13]
+[ext_resource path="res://icons/checked-shield.png" type="Texture" id=14]
+[ext_resource path="res://icons/battle-axe.png" type="Texture" id=15]
+[ext_resource path="res://icons/blade-drag.png" type="Texture" id=16]
+[ext_resource path="res://icons/blast.png" type="Texture" id=17]
+[ext_resource path="res://icons/comet-spark.png" type="Texture" id=18]
+[ext_resource path="res://icons/round-shield.png" type="Texture" id=19]
+[ext_resource path="res://entities/champions/Godotte/W/icon.png" type="Texture" id=20]
+[ext_resource path="res://entities/champions/Godotte/Q/burning-meteor.png" type="Texture" id=21]
+[ext_resource path="res://entities/champions/Godotte/E/chained-heart.png" type="Texture" id=22]
+[ext_resource path="res://icons/sticking-plaster.png" type="Texture" id=23]
+[ext_resource path="res://icons/fruiting.png" type="Texture" id=24]
+[ext_resource path="res://icons/teleport.png" type="Texture" id=25]
+
+[node name="CenterPanel" type="Panel"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -210.0
+margin_top = -103.0
+margin_right = 246.0
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+health_bar = NodePath("HealthBar")
+mana_bar = NodePath("ManaBar")
+stats_container = NodePath("Left")
+level_label = NodePath("LevelContainer/level_int")
+effect_template = NodePath("BuffContainer/Buff")
+buff_container = NodePath("BuffContainer")
+debuff_container = NodePath("DebuffContainer")
+
+[node name="vlcsnap-2021-05-25-22h31m02s823" type="Sprite" parent="."]
+visible = false
+position = Vector2( 210, -257 )
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 5 )
+
+[node name="Node" type="Node" parent="."]
+
+[node name="CastingBar" type="ProgressBar" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -383.0
+margin_top = -192.0
+margin_right = -104.0
+margin_bottom = -181.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpellName" type="Label" parent="CastingBar"]
+margin_left = -1.38132
+margin_top = -13.4905
+margin_right = 278.619
+margin_bottom = 1.50946
+rect_scale = Vector2( 1, 0.85 )
+text = "Charming"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Left" type="Panel" parent="."]
+margin_left = -195.0
+margin_top = 8.0
+margin_right = -61.0
+margin_bottom = 103.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="attack_damage" type="Label" parent="Left"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 25.7305
+margin_top = -82.3869
+margin_right = -68.2695
+margin_bottom = -68.3869
+text = "57"
+
+[node name="Icon" type="TextureRect" parent="Left/attack_damage"]
+self_modulate = Color( 0.960784, 0.639216, 0.380392, 1 )
+margin_left = -15.6427
+margin_top = -0.765259
+margin_right = -3.64265
+margin_bottom = 11.2347
+texture = ExtResource( 15 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="armor" type="Label" parent="Left"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 25.7305
+margin_top = -62.0
+margin_right = -68.2695
+margin_bottom = -48.0
+text = "26"
+
+[node name="Icon" type="TextureRect" parent="Left/armor"]
+self_modulate = Color( 0.96, 0.7392, 0.384, 1 )
+margin_left = -15.6427
+margin_top = -0.765259
+margin_right = -3.64265
+margin_bottom = 11.2347
+texture = ExtResource( 14 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="attack_speed" type="Label" parent="Left"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 25.7305
+margin_top = -41.6707
+margin_right = -68.2695
+margin_bottom = -27.6707
+text = "0.69"
+
+[node name="Icon" type="TextureRect" parent="Left/attack_speed"]
+visible = false
+self_modulate = Color( 0.96, 0.8352, 0.384, 1 )
+margin_left = -15.6427
+margin_top = -0.765259
+margin_right = -3.64265
+margin_bottom = 11.2347
+texture = ExtResource( 16 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon2" type="TextureRect" parent="Left/attack_speed"]
+self_modulate = Color( 0.96, 0.8352, 0.384, 1 )
+margin_left = -18.3988
+margin_top = 3.48694
+margin_right = -6.39875
+margin_bottom = 15.4869
+rect_rotation = -44.9999
+texture = ExtResource( 16 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="strike_chance" type="Label" parent="Left"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 25.7305
+margin_top = -21.8
+margin_right = -68.2695
+margin_bottom = -7.8
+text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="TextureRect" parent="Left/strike_chance"]
+self_modulate = Color( 0.65, 0.16, 0.16, 1 )
+margin_left = -15.6427
+margin_top = -0.765259
+margin_right = -3.64265
+margin_bottom = 11.2347
+texture = ExtResource( 18 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ability_power" type="Label" parent="Left"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 89.0558
+margin_top = -82.3869
+margin_right = -4.944
+margin_bottom = -68.3869
+text = "18"
+
+[node name="Icon" type="TextureRect" parent="Left/ability_power"]
+self_modulate = Color( 0.580392, 0.439216, 0.858824, 1 )
+margin_left = -19.4225
+margin_top = -2.65515
+margin_right = -7.4224
+margin_bottom = 9.34481
+rect_scale = Vector2( 1.414, 1.414 )
+texture = ExtResource( 17 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon2" type="TextureRect" parent="Left/ability_power"]
+visible = false
+margin_left = -15.6427
+margin_top = -0.765259
+margin_right = -3.64265
+margin_bottom = 11.2347
+texture = ExtResource( 15 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="mr" type="Label" parent="Left"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 89.0558
+margin_top = -62.0
+margin_right = -4.944
+margin_bottom = -48.0
+text = "26"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="TextureRect" parent="Left/mr"]
+visible = false
+self_modulate = Color( 0.278431, 0.819608, 0.8, 1 )
+margin_left = -15.6427
+margin_top = -0.765259
+margin_right = -3.64265
+margin_bottom = 11.2347
+texture = ExtResource( 13 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon2" type="TextureRect" parent="Left/mr"]
+self_modulate = Color( 0.278431, 0.819608, 0.8, 1 )
+margin_left = -17.0
+margin_top = -2.0
+margin_right = -4.99995
+margin_bottom = 9.99996
+rect_scale = Vector2( 1.2, 1.2 )
+texture = ExtResource( 19 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ability_haste" type="Label" parent="Left"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 89.0558
+margin_top = -41.6707
+margin_right = -4.944
+margin_bottom = -27.6707
+text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="TextureRect" parent="Left/ability_haste"]
+margin_left = -15.6427
+margin_top = -0.765259
+margin_right = -3.64265
+margin_bottom = 11.2347
+texture = ExtResource( 12 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="movement_speed" type="Label" parent="Left"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 89.0558
+margin_top = -21.8
+margin_right = -4.944
+margin_bottom = -7.8
+text = "330"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="TextureRect" parent="Left/movement_speed"]
+margin_left = -15.6427
+margin_top = -0.765259
+margin_right = -3.64265
+margin_bottom = 11.2347
+texture = ExtResource( 11 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="TextureRect" parent="."]
+margin_left = -68.0
+margin_top = 14.0
+margin_right = -1.0
+margin_bottom = 81.0
+texture = ExtResource( 8 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon_border" type="TextureRect" parent="icon"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LevelBar" type="ProgressBar" parent="."]
+self_modulate = Color( 1, 0.75, 2, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -459.0
+margin_top = -30.0
+margin_right = -398.0
+margin_bottom = -14.0
+rect_rotation = -89.9999
+max_value = 1.0
+step = 0.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LevelContainer" type="TextureRect" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -469.52
+margin_top = -34.7991
+margin_right = -444.52
+margin_bottom = -9.79907
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="level_int" type="Label" parent="LevelContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_top = 3.0
+margin_right = 6.0
+margin_bottom = 5.0
+rect_scale = Vector2( 0.8, 0.8 )
+text = "1"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Center" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Passive" type="TextureRect" parent="."]
+self_modulate = Color( 0.329412, 0.329412, 0.329412, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -433.75
+margin_top = -88.875
+margin_right = -402.75
+margin_bottom = -57.875
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Passive"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "1"
+align = 1
+valign = 1
+
+[node name="Q" type="TextureRect" parent="."]
+self_modulate = Color( 0.329412, 0.329412, 0.329412, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -400.0
+margin_top = -89.0
+margin_right = -360.0
+margin_bottom = -49.0
+texture = ExtResource( 21 )
+expand = true
+stretch_mode = 1
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_name = "Orb of Deception"
+cost = 65.0
+cooldown = 7.0
+cast_time = 0.25
+icon = NodePath(".")
+cooldown_bar = NodePath("TextureProgress")
+cooldown_label = NodePath("Label")
+cost_label = NodePath("Cost")
+cast_bar = NodePath("../CastingBar")
+cast_label = NodePath("../CastingBar/SpellName")
+requires = 2
+
+[node name="TextureProgress" type="TextureProgress" parent="Q"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" type="Label" parent="Q"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -37.0
+margin_top = 2.0
+margin_right = 8.0
+margin_bottom = 16.0
+rect_scale = Vector2( 0.75, 0.75 )
+text = "65"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="Q"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "Q"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Q"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "4"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="W" type="TextureRect" parent="."]
+self_modulate = Color( 0.33, 0.33, 0.33, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -356.0
+margin_top = -89.0
+margin_right = -316.0
+margin_bottom = -49.0
+texture = ExtResource( 20 )
+expand = true
+stretch_mode = 1
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+cost = 40.0
+cooldown = 9.0
+icon = NodePath(".")
+cooldown_bar = NodePath("TextureProgress")
+cooldown_label = NodePath("Label")
+cost_label = NodePath("Cost")
+key = 87
+
+[node name="TextureProgress" type="TextureProgress" parent="W"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" type="Label" parent="W"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -37.0
+margin_top = 2.0
+margin_right = 8.0
+margin_bottom = 16.0
+rect_scale = Vector2( 0.75, 0.75 )
+text = "40"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="W"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "4"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="W"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -4.0
+margin_top = -6.0
+margin_right = 9.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "W"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="E" type="TextureRect" parent="."]
+self_modulate = Color( 0.33, 0.33, 0.33, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -311.0
+margin_top = -89.0
+margin_right = -271.0
+margin_bottom = -49.0
+texture = ExtResource( 22 )
+expand = true
+stretch_mode = 1
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_name = "Charm"
+cost = 70.0
+cooldown = 12.0
+cast_time = 0.25
+icon = NodePath(".")
+cooldown_bar = NodePath("TextureProgress")
+cooldown_label = NodePath("Label")
+cost_label = NodePath("Cost")
+cast_bar = NodePath("../CastingBar")
+cast_label = NodePath("../CastingBar/SpellName")
+key = 69
+requires = 2
+
+[node name="TextureProgress" type="TextureProgress" parent="E"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" type="Label" parent="E"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -37.0
+margin_top = 2.0
+margin_right = 8.0
+margin_bottom = 16.0
+rect_scale = Vector2( 0.75, 0.75 )
+text = "70"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="E"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "4"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="E"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "E"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="R" type="TextureRect" parent="."]
+self_modulate = Color( 0.33, 0.33, 0.33, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -267.0
+margin_top = -89.0
+margin_right = -227.0
+margin_bottom = -49.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 1
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+cooldown = 12
+icon = NodePath(".")
+cooldown_bar = NodePath("CooldownBar")
+cooldown_label = NodePath("CooldownLabel")
+cost_label = NodePath("Cost")
+charges_label = NodePath("Charges")
+activation_bar = NodePath("ActivationBar")
+
+[node name="CooldownBar" type="TextureProgress" parent="R"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActivationBar" type="TextureProgress" parent="R"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+margin_top = -2.0
+margin_right = 2.0
+margin_bottom = 2.0
+step = 0.0
+value = 67.0
+texture_progress = ExtResource( 4 )
+fill_mode = 5
+tint_progress = Color( 3, 3, 3, 1 )
+nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" type="Label" parent="R"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -37.0
+margin_top = 2.0
+margin_right = 8.0
+margin_bottom = 16.0
+rect_scale = Vector2( 0.75, 0.75 )
+text = "100"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CooldownLabel" type="Label" parent="R"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "4"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="R"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "R"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Charges" type="Label" parent="R"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 30.8893
+margin_top = -6.0
+margin_right = 45.8893
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "3"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="D" type="TextureRect" parent="."]
+self_modulate = Color( 0.33, 0.33, 0.33, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -218.0
+margin_top = -89.0
+margin_right = -187.0
+margin_bottom = -58.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureProgress" type="TextureProgress" parent="D"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="D"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "4"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="D"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+margin_top = -6.0
+margin_right = 9.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "D"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="F" type="TextureRect" parent="."]
+self_modulate = Color( 0.33, 0.33, 0.33, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -184.0
+margin_top = -89.0
+margin_right = -153.0
+margin_bottom = -58.0
+texture = ExtResource( 23 )
+expand = true
+stretch_mode = 1
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_name = "Heal"
+cooldown = 240.0
+icon = NodePath(".")
+cooldown_bar = NodePath("TextureProgress")
+cooldown_label = NodePath("Label")
+key = 70
+
+[node name="TextureProgress" type="TextureProgress" parent="F"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="F"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "4"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="F"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+margin_top = -6.0
+margin_right = 9.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "F"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+self_modulate = Color( 1, 2, 1, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -436.0
+margin_top = -36.0
+margin_right = -152.0
+margin_bottom = -20.0
+percent_visible = false
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+label = NodePath("Health")
+regen_label = NodePath("HealthRegen")
+
+[node name="Health" type="Label" parent="HealthBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 3.0
+margin_right = 68.0
+margin_bottom = 1.0
+rect_scale = Vector2( 0.8, 0.8 )
+text = "686 / 686"
+align = 1
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthRegen" type="Label" parent="HealthBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = 3.0
+margin_right = 47.0002
+margin_bottom = 1.0
+rect_scale = Vector2( 0.83, 0.83 )
+text = "+1.8"
+align = 2
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ManaBar" type="ProgressBar" parent="."]
+self_modulate = Color( 1, 1.75, 2, 1 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -436.0
+margin_top = -23.0
+margin_right = -152.0
+margin_bottom = -7.0
+percent_visible = false
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+label = NodePath("Mana")
+regen_label = NodePath("ManaRegen")
+
+[node name="Mana" type="Label" parent="ManaBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = 2.0
+margin_right = 68.0
+rect_scale = Vector2( 0.8, 0.8 )
+text = "204 / 454"
+align = 1
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ManaRegen" type="Label" parent="ManaBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = 2.0
+margin_right = 47.0
+rect_scale = Vector2( 0.83, 0.83 )
+text = "+1.8"
+align = 2
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Right" type="Control" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -142.0
+margin_top = -103.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="1" type="NinePatchRect" parent="Right"]
+margin_left = 10.0
+margin_top = 14.0
+margin_right = 37.0
+margin_bottom = 41.0
+texture = ExtResource( 4 )
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="Right/1"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "1"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="2" type="NinePatchRect" parent="Right"]
+margin_left = 43.0729
+margin_top = 14.0
+margin_right = 70.0729
+margin_bottom = 41.0
+texture = ExtResource( 4 )
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="Right/2"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "2"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="3" type="NinePatchRect" parent="Right"]
+margin_left = 74.8157
+margin_top = 14.2242
+margin_right = 101.816
+margin_bottom = 41.2242
+texture = ExtResource( 4 )
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="Right/3"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "3"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="4" type="TextureRect" parent="Right"]
+self_modulate = Color( 0.329412, 0.329412, 0.329412, 1 )
+margin_left = 108.0
+margin_top = 17.4716
+margin_right = 132.0
+margin_bottom = 41.4716
+texture = ExtResource( 24 )
+expand = true
+stretch_mode = 1
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+cooldown = 240.0
+icon = NodePath(".")
+cooldown_bar = NodePath("TextureProgress")
+cooldown_label = NodePath("Label")
+charges_label = NodePath("Charges")
+key = 52
+requires = 1
+
+[node name="TextureProgress" type="TextureProgress" parent="Right/4"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Right/4"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "4"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="Right/4"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "4"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Charges" type="Label" parent="Right/4"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -8.0
+margin_top = -6.0
+margin_right = 7.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "2"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RechargeBar" type="TextureProgress" parent="Right/4"]
+visible = false
+self_modulate = Color( 0.501961, 0.501961, 0.501961, 0.701961 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 37.5
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="5" type="NinePatchRect" parent="Right"]
+margin_left = 10.0
+margin_top = 45.125
+margin_right = 37.0
+margin_bottom = 72.125
+texture = ExtResource( 4 )
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="Right/5"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "5"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="6" type="NinePatchRect" parent="Right"]
+margin_left = 43.0729
+margin_top = 45.125
+margin_right = 70.0729
+margin_bottom = 72.125
+texture = ExtResource( 4 )
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="Right/6"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "6"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="7" type="NinePatchRect" parent="Right"]
+margin_left = 74.8157
+margin_top = 45.125
+margin_right = 101.816
+margin_bottom = 72.125
+texture = ExtResource( 4 )
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="Right/7"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "7"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="B" type="TextureRect" parent="Right"]
+self_modulate = Color( 0.329412, 0.329412, 0.329412, 1 )
+margin_left = 108.0
+margin_top = 45.7242
+margin_right = 132.0
+margin_bottom = 69.7242
+texture = ExtResource( 25 )
+expand = true
+stretch_mode = 1
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_name = "Recall"
+cast_time = 8.0
+icon = NodePath(".")
+cooldown_bar = NodePath("TextureProgress")
+cooldown_label = NodePath("Label")
+cast_bar = NodePath("../../CastingBar")
+cast_label = NodePath("../../CastingBar/SpellName")
+key = 66
+
+[node name="TextureProgress" type="TextureProgress" parent="Right/B"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Right/B"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "4"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Hotkey" type="Label" parent="Right/B"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = -5.0
+margin_top = -6.0
+margin_right = 10.0
+margin_bottom = 8.0
+rect_scale = Vector2( 0.8, 0.75 )
+text = "B"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gold" type="Button" parent="Right"]
+margin_left = 10.0
+margin_top = 77.0
+margin_right = 132.0
+margin_bottom = 97.0
+text = "$ 500"
+expand_icon = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BuffContainer" type="HBoxContainer" parent="."]
+margin_top = -26.0
+margin_right = 314.0
+custom_constants/separation = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Buff" type="TextureRect" parent="BuffContainer"]
+margin_right = 26.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 26, 26 )
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 5
+script = ExtResource( 9 )
+progress_bar = NodePath("TextureProgress")
+stacks_label = NodePath("Stacks")
+
+[node name="TextureProgress" type="TextureProgress" parent="BuffContainer/Buff"]
+self_modulate = Color( 0.5, 0.5, 0.5, 0.7 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+step = 0.0
+value = 37.5
+texture_progress = ExtResource( 1 )
+fill_mode = 5
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stacks" type="Label" parent="BuffContainer/Buff"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -26.0
+margin_top = -12.0
+margin_bottom = 2.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "10"
+align = 2
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DebuffContainer" type="HBoxContainer" parent="."]
+margin_top = -26.0
+margin_right = 314.0
+custom_constants/separation = 1
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}

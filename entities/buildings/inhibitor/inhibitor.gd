@@ -2,26 +2,28 @@ class_name Inhibitor
 extends Damagable
 
 export(Array, NodePath) var protects
+var protected_nodes := []
 
 func _ready():
-	for i in range(protects.size()):
-		protects[i] = get_node(protects[i])
-		protects[i].invulnerable = true
-		protects[i].untargetable = true
+	for path in protects:
+		var node = get_node(path)
+		node.invulnerable += 1
+		node.untargetable += 1
+		protected_nodes.append(node)
 
 func killed_by(killer):
-	invulnerable = true
-	untargetable = true
-	for protected in protects:
-		protected.invulnerable = false
-		protected.untargetable = false
+	invulnerable += 1
+	untargetable += 1
+	for protected in protected_nodes:
+		protected.invulnerable -= 1
+		protected.untargetable -= 1
 
 func fully_restored():
-	invulnerable = false
-	untargetable = false
-	for protected in protects:
+	invulnerable -= 1
+	untargetable -= 1
+	for protected in protected_nodes:
 		if is_instance_valid(protected):
-			protected.invulnerable = true
-			protected.untargetable = true
+			protected.invulnerable += 1
+			protected.untargetable += 1
 		else:
 			print("inhibitor.gd:27 saved (approved)")

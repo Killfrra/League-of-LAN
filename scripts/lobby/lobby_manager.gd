@@ -27,14 +27,16 @@ signal loading_screen(opposite_team_choices)
 signal spawn()
 
 func _ready():
+	#Engine.time_scale = 15.0
 	get_tree().connect("network_peer_connected", self, "_on_network_peer_connected")
 	
 func login(uname):
-	self.username = username
+	username = uname
 	emit_signal("logged_in", username)
 	
 func connect_to(server_ip: String):
 	var peer: = NetworkedMultiplayerENet.new()
+	#peer.compression_mode = peer.COMPRESS_RANGE_CODER
 	if peer.create_client(server_ip, SERVER_PORT) == OK:
 		get_tree().network_peer = peer
 	else:
@@ -42,6 +44,7 @@ func connect_to(server_ip: String):
 
 func host(game_name: String, team_size: int, map, type):
 	var peer = NetworkedMultiplayerENet.new()
+	#peer.compression_mode = peer.COMPRESS_RANGE_CODER
 	peer.server_relay = false
 	#var max_players := team_size * 2 + 4#spec
 	if peer.create_server(SERVER_PORT, SERVER_MAX_CLIENTS) == OK:
@@ -214,16 +217,16 @@ func sync_time():
 	
 	assert(local_client.id == 1)
 	
-	for i in range(5):
+	for _i in range(5):
 		for client in Game.clients.values():
 			
 			if client.id == 1:
 				continue
 			
-			var req_time = OS.get_ticks_usec()
+			var req_time = Lobby.get_ticks_usec()
 			rpc_id(client.id, "proc_time_req")
 			var client_time = yield(self, "time_resp_arrived")
-			var resp_arrival_time = OS.get_ticks_usec()
+			var resp_arrival_time = Lobby.get_ticks_usec()
 			var round_trip_time = resp_arrival_time - req_time
 			if !client.has("min_round_trip_time") || round_trip_time < client.min_round_trip_time: # == -1:
 				client.min_round_trip_time = round_trip_time
@@ -233,7 +236,10 @@ func sync_time():
 				max_round_trip_time = round_trip_time
 	
 	var interval_between_physics_frames := float(sec_to_server_time_mul) / float(Engine.iterations_per_second)
-	interpolation_delay = max_interpolation_delay #clamp(max_round_trip_time, interval_between_physics_frames, max_interpolation_delay)
+	#clamp(max_round_trip_time, interval_between_physics_frames, max_interpolation_delay)
+	#max(max_round_trip_time, interval_between_physics_frames)
+	var min_interpolation_delay = max(0.1 * sec_to_server_time_mul, interval_between_physics_frames)
+	interpolation_delay = clamp(max_round_trip_time, min_interpolation_delay, max_interpolation_delay)
 	print("interpolation_delay for everyone = ", interpolation_delay)
 	for client in Game.clients.values():
 		if client.id != 1:
@@ -243,20 +249,22 @@ func sync_time():
 	#emit_signal("time_sync_finished")
 	#TODO: should I pass team_choices here?
 	#TODO: rename
+	Game.start_time = current_time
 	emit_signal("spawn", my_team_choices)
 
 puppetsync func proc_time_req():
-	rpc_id(1, "handle_time_resp", OS.get_ticks_usec())
+	rpc_id(1, "handle_time_resp", Lobby.get_ticks_usec())
 
 master func handle_time_resp(player_time):
 	emit_signal("time_resp_arrived", player_time)
 
 func get_server_time_with_interpolation_offset():
-	return OS.get_ticks_usec() + server_time_offset - interpolation_delay
+	return Lobby.get_ticks_usec() + server_time_offset - interpolation_delay
 
 puppet func adjust_time_and_spawn(serv_time_off, interp_delay):
 	server_time_offset = serv_time_off
 	interpolation_delay = interp_delay
+	Game.start_time = current_time + server_time_offset
 	emit_signal("spawn", my_team_choices)
 
 func get_ip():
@@ -267,3 +275,21 @@ func get_ip():
 		if (addr as String).count('.') == 3:
 			return addr
 	return "127.0.0.1"
+
+var current_time := 0.0
+func get_ticks_usec():
+	return current_time
+	
+func get_ticks_msec():
+	return current_time * 1000.0 / sec_to_server_time_mul
+
+func _physics_process(delta):
+	current_time += delta * sec_to_server_time_mul
+
+func end_game(winner_team):
+	for client in Game.clients.values():
+		rpc_id(client.id, "game_ended", winner_team, {})
+	
+signal game_ended(winner_team)
+puppetsync func game_ended(winner_team, missing_info):
+	emit_signal("game_ended", winner_team)

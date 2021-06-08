@@ -6,6 +6,8 @@ var map
 var team_size: int
 var type
 
+var start_time
+
 var lists := {}
 var clients
 var spectators

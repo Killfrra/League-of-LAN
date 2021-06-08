@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://entities/buildings/nexus/nexus.gd" type="Script" id=1]
+[ext_resource path="res://entities/buildings/nexus/nexus_avatar.tscn" type="PackedScene" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 297.0
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 347.0
+
+[node name="Nexus" type="StaticBody2D"]
+script = ExtResource( 1 )
+avatar_prefab = ExtResource( 2 )
+health_max = 5500.0
+health_regen = 25.0
+armor = 0.0
+mr = 0.0
+granted_exp = 0.0
+granted_gold = 50
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="GameplayRadius" type="Area2D" parent="."]
+rotation = 0.785398
+input_pickable = false
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GameplayRadius"]
+shape = SubResource( 2 )

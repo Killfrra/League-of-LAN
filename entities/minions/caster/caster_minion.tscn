@@ -1,23 +1,24 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://entities/minions/minion.gd" type="Script" id=1]
 [ext_resource path="res://entities/minions/minion_avatar.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scripts/game/vision_area.gd" type="Script" id=3]
+[ext_resource path="res://scripts/game/sight_area.gd" type="Script" id=3]
 [ext_resource path="res://entities/bullet/bullet.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scripts/game/acquisition_area.gd" type="Script" id=5]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.0
 
-[sub_resource type="CircleShape2D" id=2]
+[sub_resource type="CircleShape2D" id=3]
 radius = 31.5
 
-[sub_resource type="CircleShape2D" id=3]
+[sub_resource type="CircleShape2D" id=4]
 radius = 34.0
 
-[sub_resource type="CircleShape2D" id=4]
+[sub_resource type="CircleShape2D" id=5]
 radius = 525.0
 
-[sub_resource type="CircleShape2D" id=5]
+[sub_resource type="CircleShape2D" id=6]
 radius = 1200.0
 
 [node name="CasterMinion" type="RigidBody2D"]
@@ -27,33 +28,33 @@ gravity_scale = 0.0
 linear_damp = 0.0
 script = ExtResource( 1 )
 avatar_prefab = ExtResource( 2 )
-health = 296.0
 health_max = 296.0
 health_regen = 0.0
 armor = 0.0
 mr = 0.0
-damage = 24.0
+attack_damage = 24.0
 attack_speed = 0.667
 bullet_prefab = ExtResource( 4 )
-move_speed = 325.0
+base_movement_speed = 325.0
 body = NodePath(".")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 2 )
+shape = SubResource( 3 )
 
 [node name="GameplayRadius" type="Area2D" parent="."]
 input_pickable = false
 monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GameplayRadius"]
-shape = SubResource( 3 )
+shape = SubResource( 4 )
 
 [node name="AcquisitionRadius" type="Area2D" parent="."]
 input_pickable = false
 monitorable = false
+script = ExtResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AcquisitionRadius"]
-shape = SubResource( 4 )
+shape = SubResource( 5 )
 
 [node name="SightRadius" type="Area2D" parent="."]
 input_pickable = false
@@ -62,4 +63,4 @@ script = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SightRadius"]
 position = Vector2( 0, -4.48987 )
-shape = SubResource( 5 )
+shape = SubResource( 6 )

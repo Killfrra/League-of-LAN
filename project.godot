@@ -9,17 +9,32 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "CanvasItem",
+"class": "Action",
+"language": "GDScript",
+"path": "res://scripts/game/action_button.gd"
+}, {
+"base": "CanvasItem",
+"class": "ActionBase",
+"language": "GDScript",
+"path": "res://scripts/game/action_base.gd"
+}, {
 "base": "Damagable",
 "class": "Autoattacking",
 "language": "GDScript",
 "path": "res://scripts/game/autoattacking.gd"
+}, {
+"base": "DamagableAvatar",
+"class": "AutoattackingAvatar",
+"language": "GDScript",
+"path": "res://scripts/game/autoattacking_avatar.gd"
 }, {
 "base": "Node2D",
 "class": "Avatar",
 "language": "GDScript",
 "path": "res://scripts/game/avatar.gd"
 }, {
-"base": "Hiding",
+"base": "Node2D",
 "class": "AvatarOwner",
 "language": "GDScript",
 "path": "res://scripts/game/avatar_owner.gd"
@@ -39,60 +54,100 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/game/camera.gd"
 }, {
+"base": "Effect",
+"class": "CharmEffect",
+"language": "GDScript",
+"path": "res://entities/champions/Godotte/E/charm_effect.gd"
+}, {
 "base": "AvatarOwner",
 "class": "Damagable",
 "language": "GDScript",
 "path": "res://scripts/game/damagable.gd"
+}, {
+"base": "Avatar",
+"class": "DamagableAvatar",
+"language": "GDScript",
+"path": "res://scripts/game/damagable_avatar.gd"
+}, {
+"base": "Reference",
+"class": "Effect",
+"language": "GDScript",
+"path": "res://scripts/game/effect.gd"
+}, {
+"base": "TextureRect",
+"class": "EffectIcon",
+"language": "GDScript",
+"path": "res://scripts/game/effect_icon.gd"
 }, {
 "base": "Control",
 "class": "GameUI",
 "language": "GDScript",
 "path": "res://scripts/game/game_ui.gd"
 }, {
+"base": "ActionBase",
+"class": "GodotteE",
+"language": "GDScript",
+"path": "res://entities/champions/Godotte/E/godotte_e.gd"
+}, {
+"base": "ActionBase",
+"class": "GodotteQ",
+"language": "GDScript",
+"path": "res://entities/champions/Godotte/Q/godotte_q.gd"
+}, {
+"base": "ActionBase",
+"class": "GodotteW",
+"language": "GDScript",
+"path": "res://entities/champions/Godotte/W/godotte_w.gd"
+}, {
 "base": "Area2D",
 "class": "Ground",
 "language": "GDScript",
 "path": "res://scripts/game/ground.gd"
 }, {
-"base": "Node2D",
-"class": "Hiding",
+"base": "ActionBase",
+"class": "HealSpell",
 "language": "GDScript",
-"path": "res://scripts/game/hiding_in_the_fog_of_war.gd"
+"path": "res://entities/champions/heal_spell.gd"
 }, {
 "base": "Damagable",
 "class": "Inhibitor",
 "language": "GDScript",
 "path": "res://entities/buildings/inhibitor/inhibitor.gd"
 }, {
-"base": "SelectableAvatar",
+"base": "DamagableAvatar",
 "class": "InhibitorAvatar",
 "language": "GDScript",
 "path": "res://entities/buildings/inhibitor/inhibitor_avatar.gd"
 }, {
-"base": "Panel",
+"base": "AvatarOwner",
+"class": "Kiss",
+"language": "GDScript",
+"path": "res://entities/champions/Godotte/E/kiss/kiss.gd"
+}, {
+"base": "Control",
 "class": "LobbyUI_Page1_Login",
 "language": "GDScript",
 "path": "res://scripts/lobby/lobby_ui_page1_login.gd"
 }, {
-"base": "TabContainer",
+"base": "Control",
 "class": "LobbyUI_Page2_ConnectOrHostGame",
 "language": "GDScript",
 "path": "res://scripts/lobby/lobby_ui_page2_connect_or_host_game.gd"
 }, {
-"base": "Panel",
+"base": "Control",
 "class": "LobbyUI_Page3_JoinTeam",
 "language": "GDScript",
 "path": "res://scripts/lobby/lobby_ui_page3_join_team.gd"
 }, {
-"base": "Panel",
+"base": "Control",
 "class": "LobbyUI_Page4_SelectRunes",
 "language": "GDScript",
 "path": "res://scripts/lobby/lobby_ui_page4_select_runes.gd"
 }, {
-"base": "Node",
+"base": "Control",
 "class": "LobbyUI_PageSwitcher",
 "language": "GDScript",
-"path": "res://scripts/lobby_ui_page_switcher.gd"
+"path": "res://scripts/lobby/lobby_ui_page_switcher.gd"
 }, {
 "base": "Minion",
 "class": "MeleeMinon",
@@ -104,7 +159,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://entities/minions/minion.gd"
 }, {
-"base": "SelectableAvatar",
+"base": "MovingAvatar",
 "class": "MinionAvatar",
 "language": "GDScript",
 "path": "res://entities/minions/minion_avatar.gd"
@@ -114,7 +169,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://entities/monsters/monster.gd"
 }, {
-"base": "SelectableAvatar",
+"base": "MovingAvatar",
 "class": "MonsterAvatar",
 "language": "GDScript",
 "path": "res://entities/monsters/monster_avatar.gd"
@@ -124,37 +179,62 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/game/moving.gd"
 }, {
+"base": "AutoattackingAvatar",
+"class": "MovingAvatar",
+"language": "GDScript",
+"path": "res://scripts/game/moving_avatar.gd"
+}, {
+"base": "Damagable",
+"class": "Nexus",
+"language": "GDScript",
+"path": "res://entities/buildings/nexus/nexus.gd"
+}, {
+"base": "AvatarOwner",
+"class": "Orb",
+"language": "GDScript",
+"path": "res://entities/champions/Godotte/Q/orb/orb.gd"
+}, {
 "base": "Moving",
 "class": "Player",
 "language": "GDScript",
 "path": "res://entities/champions/player.gd"
 }, {
-"base": "SelectableAvatar",
+"base": "MovingAvatar",
 "class": "PlayerAvatar",
 "language": "GDScript",
 "path": "res://entities/champions/player_avatar.gd"
 }, {
-"base": "Reference",
-"class": "Selectable",
+"base": "CanvasItem",
+"class": "RBase",
 "language": "GDScript",
-"path": "res://trash/selectable.gd"
+"path": "res://entities/champions/Godotte/R/r_base.gd"
 }, {
-"base": "Avatar",
-"class": "SelectableAvatar",
+"base": "RBase",
+"class": "RButton",
 "language": "GDScript",
-"path": "res://scripts/game/selectable_avatar.gd"
+"path": "res://entities/champions/Godotte/R/r_button.gd"
 }, {
 "base": "Node",
 "class": "SpawnManager",
 "language": "GDScript",
 "path": "res://scripts/game/spawn_manager.gd"
 }, {
+"base": "ProgressBar",
+"class": "StatBar",
+"language": "GDScript",
+"path": "res://stat_bar.gd"
+}, {
+"base": "CanvasItem",
+"class": "StatsPanel",
+"language": "GDScript",
+"path": "res://entities/champions/panel.gd"
+}, {
 "base": "Damagable",
 "class": "Totem",
 "language": "GDScript",
 "path": "res://entities/totem/totem.gd"
 }, {
-"base": "SelectableAvatar",
+"base": "DamagableAvatar",
 "class": "TotemAvatar",
 "language": "GDScript",
 "path": "res://entities/totem/totem_avatar.gd"
@@ -164,7 +244,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://entities/buildings/turret/turret.gd"
 }, {
-"base": "SelectableAvatar",
+"base": "AutoattackingAvatar",
 "class": "TurretAvatar",
 "language": "GDScript",
 "path": "res://entities/buildings/turret/turret_avatar.gd"
@@ -172,21 +252,37 @@ _global_script_classes=[ {
 "base": "Area2D",
 "class": "VisionArea",
 "language": "GDScript",
-"path": "res://scripts/game/vision_area.gd"
+"path": "res://scripts/game/sight_area.gd"
+}, {
+"base": "Area2D",
+"class": "VisionSubArea",
+"language": "GDScript",
+"path": "res://scripts/game/acquisition_area.gd"
 } ]
 _global_script_class_icons={
+"Action": "",
+"ActionBase": "",
 "Autoattacking": "",
+"AutoattackingAvatar": "",
 "Avatar": "",
 "AvatarOwner": "",
 "Bullet": "",
 "BulletAvatar": "",
 "CameraController": "",
+"CharmEffect": "",
 "Damagable": "",
+"DamagableAvatar": "",
+"Effect": "",
+"EffectIcon": "",
 "GameUI": "",
+"GodotteE": "",
+"GodotteQ": "",
+"GodotteW": "",
 "Ground": "",
-"Hiding": "",
+"HealSpell": "",
 "Inhibitor": "",
 "InhibitorAvatar": "",
+"Kiss": "",
 "LobbyUI_Page1_Login": "",
 "LobbyUI_Page2_ConnectOrHostGame": "",
 "LobbyUI_Page3_JoinTeam": "",
@@ -198,21 +294,27 @@ _global_script_class_icons={
 "Monster": "",
 "MonsterAvatar": "",
 "Moving": "",
+"MovingAvatar": "",
+"Nexus": "",
+"Orb": "",
 "Player": "",
 "PlayerAvatar": "",
-"Selectable": "",
-"SelectableAvatar": "",
+"RBase": "",
+"RButton": "",
 "SpawnManager": "",
+"StatBar": "",
+"StatsPanel": "",
 "Totem": "",
 "TotemAvatar": "",
 "Turret": "",
 "TurretAvatar": "",
-"VisionArea": ""
+"VisionArea": "res://editor_icons/true_sight_icon.svg",
+"VisionSubArea": "res://editor_icons/acquisition_range.svg"
 }
 
 [application]
 
-config/name="Godot Stable"
+config/name="League of LAN"
 run/main_scene="res://scenes/main.tscn"
 config/icon="res://icon.png"
 
@@ -227,6 +329,7 @@ AvatarSpawner="*res://scripts/game/avatar_spawner.gd"
 [debug]
 
 gdscript/warnings/unused_argument=false
+gdscript/warnings/unused_signal=false
 gdscript/warnings/return_value_discarded=false
 
 [display]
@@ -235,6 +338,9 @@ window/size/width=1280
 window/size/height=720
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
+window/size/width.Android=800
+window/size/height.Android=480
+window/vsync/use_vsync.Android=false
 
 [editor]
 
@@ -246,17 +352,40 @@ binary=false
 
 [layer_names]
 
-2d_physics/layer_2="team1vision"
-2d_physics/layer_3="team2vision"
-2d_physics/layer_4="team1gameplay"
-2d_physics/layer_5="team2gameplay"
+2d_physics/layer_2="seen by team2"
+2d_physics/layer_3="seen by team1"
+2d_physics/layer_4="damagable by team2"
+2d_physics/layer_5="damagable by team1"
+2d_physics/layer_6="team1 vision block"
+2d_physics/layer_7="team2 vision block"
+2d_physics/layer_8="team1 champion"
+2d_physics/layer_9="team2 champion"
 
 [physics]
 
-common/physics_fps=5
+2d/thread_model=2
 2d/default_linear_damp=0.0
 
 [rendering]
 
+quality/driver/fallback_to_gles2=true
+quality/intended_usage/framebuffer_allocation=3
+threads/thread_model=2
+vram_compression/import_etc=true
+quality/directional_shadow/size=256
+quality/shadow_atlas/size=256
+quality/shadow_atlas/cubemap_size=64
+quality/shadow_atlas/quadrant_0_subdiv=0
+quality/shadow_atlas/quadrant_1_subdiv=0
+quality/shadow_atlas/quadrant_2_subdiv=0
+quality/shadow_atlas/quadrant_3_subdiv=0
+quality/shadows/filter_mode=0
+quality/reflections/texture_array_reflections=false
+quality/reflections/high_quality_ggx=false
+quality/shading/force_vertex_shading=true
+quality/shading/force_lambert_over_burley=true
+quality/shading/force_blinn_over_ggx=true
+quality/lightmapping/use_bicubic_sampling=false
 environment/default_clear_color=Color( 0, 0, 0, 1 )
+quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"

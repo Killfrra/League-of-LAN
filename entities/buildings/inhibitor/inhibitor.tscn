@@ -4,10 +4,10 @@
 [ext_resource path="res://entities/buildings/inhibitor/inhibitor_avatar.tscn" type="PackedScene" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 137.542
+radius = 209.0
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 185.0
+radius = 259.0
 
 [node name="Inhibitor" type="StaticBody2D"]
 script = ExtResource( 1 )

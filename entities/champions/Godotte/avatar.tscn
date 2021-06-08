@@ -1,30 +1,49 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://sprites/LightSprite.png" type="Texture" id=1]
+[ext_resource path="res://entities/light.tscn" type="PackedScene" id=1]
 [ext_resource path="res://sprites/godot_favicon.png" type="Texture" id=2]
 [ext_resource path="res://sprites/circle.png" type="Texture" id=3]
 [ext_resource path="res://entities/champions/player_avatar.gd" type="Script" id=4]
+[ext_resource path="res://entities/champions/Godotte/images/Q.png" type="Texture" id=5]
+[ext_resource path="res://entities/champions/Godotte/panel.tscn" type="PackedScene" id=6]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 100.0
 
 [node name="PlayerAvatar" type="Node2D"]
+position = Vector2( 640, 360 )
 script = ExtResource( 4 )
+healthbar = NodePath("Bars/Panel/HealthBar")
+panel = NodePath("Fixed/CenterPanel")
+exp_bar = NodePath("Fixed/CenterPanel/LevelBar")
+gold_button = NodePath("Fixed/CenterPanel/Right/gold")
+ability_paths = [ NodePath("Fixed/CenterPanel/Q"), NodePath("Fixed/CenterPanel/W"), NodePath("Fixed/CenterPanel/E"), NodePath("Fixed/CenterPanel/F"), NodePath("Fixed/CenterPanel/Right/4"), NodePath("Fixed/CenterPanel/Right/B"), NodePath("Fixed/CenterPanel/R") ]
 
-[node name="Icon" type="Sprite" parent="."]
+[node name="Fixed" type="Node" parent="."]
+
+[node name="CenterPanel" parent="Fixed" instance=ExtResource( 6 )]
+
+[node name="Q" parent="Fixed/CenterPanel" index="9"]
+blast_zone = NodePath("../../../Abilities/Q/Range")
+
+[node name="E" parent="Fixed/CenterPanel" index="11"]
+blast_zone = NodePath("../../../Abilities/Q/Range")
+
+[node name="Circle" type="Sprite" parent="."]
+visible = false
 scale = Vector2( 2, 2 )
 z_index = 4
 z_as_relative = false
 texture = ExtResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="Icon"]
+[node name="Icon" type="Sprite" parent="."]
+scale = Vector2( 2.3, 2.3 )
+z_index = 4
+z_as_relative = false
 texture = ExtResource( 2 )
 
-[node name="Light2D" type="Light2D" parent="."]
-texture = ExtResource( 1 )
+[node name="Light2D" parent="." instance=ExtResource( 1 )]
 texture_scale = 2.0
-mode = 2
-shadow_enabled = true
 
 [node name="SelectionRadius" type="Area2D" parent="."]
 monitoring = false
@@ -32,3 +51,86 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionRadius"]
 shape = SubResource( 1 )
+
+[node name="Bars" type="Node2D" parent="."]
+z_index = 7
+z_as_relative = false
+
+[node name="Panel" type="Panel" parent="Bars"]
+margin_left = -93.5
+margin_top = -108.0
+margin_right = 93.5
+margin_bottom = -73.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthBar" type="ProgressBar" parent="Bars/Panel"]
+self_modulate = Color( 1, 2, 1, 1 )
+margin_left = 31.0
+margin_right = 187.0
+margin_bottom = 24.0
+value = 100.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ManaBar" type="ProgressBar" parent="Bars/Panel"]
+self_modulate = Color( 1, 1.75, 2, 1 )
+margin_left = 32.0001
+margin_top = 23.0001
+margin_right = 186.0
+margin_bottom = 34.0001
+value = 100.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LevelLabel" type="Label" parent="Bars/Panel"]
+margin_top = 9.79211
+margin_right = 22.0
+margin_bottom = 23.7921
+rect_scale = Vector2( 1.45, 1.2 )
+text = "13"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NameLabel" type="Label" parent="Bars/Panel"]
+margin_top = -19.9999
+margin_right = 129.0
+margin_bottom = -3.99994
+rect_scale = Vector2( 1.45, 1.2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "lisadorable"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Abilities" type="Node2D" parent="."]
+
+[node name="Q" type="Node2D" parent="Abilities"]
+rotation = 0.785398
+
+[node name="Range" type="Sprite" parent="Abilities/Q"]
+self_modulate = Color( 1, 1, 1, 0.5 )
+position = Vector2( 354.446, -342.672 )
+scale = Vector2( 11.0764, 10.7085 )
+z_index = 7
+z_as_relative = false
+texture = ExtResource( 5 )
+
+[node name="Line2D" type="Line2D" parent="Abilities/Q"]
+visible = false
+points = PoolVector2Array( 0, 0, 636.396, -636.396 )
+
+[node name="OrbTarget" type="Node2D" parent="Abilities/Q"]
+position = Vector2( 636.396, -636.396 )
+rotation = -0.785398
+
+[editable path="Fixed/CenterPanel"]

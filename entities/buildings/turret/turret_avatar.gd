@@ -1,5 +1,5 @@
 class_name TurretAvatar
-extends SelectableAvatar
+extends AutoattackingAvatar
 
 export(NodePath) onready var turret = get_node(turret)
 var tween: Tween
@@ -8,17 +8,16 @@ func _ready():
 	tween = Tween.new()
 	add_child(tween)
 
-func pack_initials(for_own_team: bool):
-	return {
-		"owner_team": avatar_owner.team,
-		"global_position": avatar_owner.global_position
-	}
-
 func init(data):
-	.unpack(data)
+	.init(data)
 	$Light2D.enabled = !should_disable_light()
 	if should_change_color():
 		$Turrel.texture = preload("res://sprites/towerDefense_tile250.png")
+#		var color = Color.transparent / 3.0 + Color.black
+#		$Turrel.self_modulate = color
+#		$Turrel.light_mask = 1 << 19
+#		$Base.self_modulate = color
+#		$Base.light_mask = 1 << 19
 
 func head_to(to, time_to_fire):
 	rpc_id(0, "remote_head_to", to, time_to_fire)

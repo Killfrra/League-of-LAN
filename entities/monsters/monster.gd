@@ -1,6 +1,9 @@
 class_name Monster
 extends Moving
 
+func is_class(name: String):
+	return name == "Monster" || .is_class(name)
+
 onready var base_location := global_position
 var patience := 6
 var distance_traveled := 0.0
@@ -22,7 +25,7 @@ func damaged_by(damager):
 	if not strict_equality(target, base_location):
 		if target == null:
 			patience_tick_timer.start()
-			#print("timer started")
+			print("timer started")
 		elif damager != target:
 			decrease_patience(1)
 			
@@ -34,7 +37,7 @@ func damaged_by(damager):
 		
 func decrease_patience(amount):
 	patience -= amount
-	print(patience)
+	#print(patience)
 	if patience <= 0:
 		patience_tick_timer.stop()
 		#print("timer stopped")
@@ -59,7 +62,7 @@ func on_moved():
 
 func head_home():
 	patience_tick_timer.stop()
-	health_regen = health_max / (distance_traveled / move_speed)
+	health_regen = health_max / (distance_traveled / base_movement_speed)
 	set_target(base_location)
 	
 func on_damaging_target(_target):

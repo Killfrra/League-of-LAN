@@ -42,3 +42,15 @@ const team2gameplay_layers = {
 	Team.Team2: 16,
 	Team.Spectators: 8 + 16
 }
+
+const team2vision_blocking_layer = {
+	Team.Team1: 32,
+	Team.Team2: 64,
+	Team.Spectators: 32 + 64
+}
+
+# walkaround for intersect_shape bug (detects non-monitorable areas)
+const champion_layer = {
+	Team.Team1: 128,
+	Team.Team2: 256
+}

@@ -10,19 +10,17 @@ var radio_silence := true
 #TODO: Ignore Allied Collision before lane ("ghosted for 25s"?)
 
 func _ready():
-	$WakeUpRadius.connect("area_entered", self, "wake_up")
-	var opposite_team_layer = Types.team2gameplay_layers[Lobby.opposite_team[team]]
-	$WakeUpRadius.collision_mask = opposite_team_layer
-	$FirstAcquisitionRadius.collision_mask = opposite_team_layer
-	
+	($FirstAcquisitionRadius as VisionSubArea).set_team(team)
+	($WakeUpRadius as VisionSubArea).set_team(team)
+	$WakeUpRadius.connect("entity_entered", self, "wake_up")
 
-func on_autoacquisition_area_entered(area):
+func on_autoacquisition_area_entered(entity):
 	if not sleeping:
-		.on_autoacquisition_area_entered(area)
+		.on_autoacquisition_area_entered(entity)
 
-func on_autoacquisition_area_exited(area: Area2D):
+func on_autoacquisition_area_exited(entity):
 	if not sleeping:
-		.on_autoacquisition_area_exited(area)
+		.on_autoacquisition_area_exited(entity)
 
 #func damaged_by(damager):
 #	wake_up()
@@ -50,28 +48,28 @@ func set_target(to):
 		target.selected_as_target_by_num_of_minions += 1
 		#print(name, " selects ", target.name, " as target")
 
-func wake_up(_area = null):
+func wake_up(_entity = null):
 	
 	if not sleeping:
 		return
 	
 	sleeping = false
-	#print(name, " woked up by ", _area.get_parent().name)
+	#print(name, " woked up by ", _entity.name)
 	
 	try_to_find_target_in_area($FirstAcquisitionRadius)
 	
 	if typeof(target) == TYPE_OBJECT:
 		target_locked = true
 		#print(name, " ", target, target.get_child_count(), target.get_child(0))
-		on_autoacquisition_area_entered(target.get_child(0))
+		on_autoacquisition_area_entered(target)
 		target_locked = false
 	
-	$WakeUpRadius.queue_free()
 	$FirstAcquisitionRadius.queue_free()
+	$WakeUpRadius.queue_free()
 
-	for area in $AcquisitionRadius.get_overlapping_areas():
-		if not strict_equality(target, area.get_parent()):
-			on_autoacquisition_area_entered(area)
+	for entity in $AcquisitionRadius.get_overlapping_areas():
+		if not strict_equality(target, entity):
+			on_autoacquisition_area_entered(entity)
 			
 func calc_priority(candidate, vicium = null):
 	var score = .calc_priority(candidate, vicium)

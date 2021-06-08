@@ -1,11 +1,19 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://entities/champions/Godotte/avatar.tscn" type="PackedScene" id=1]
 [ext_resource path="res://entities/totem/totem.tscn" type="PackedScene" id=2]
 [ext_resource path="res://sprites/circle.png" type="Texture" id=3]
 [ext_resource path="res://entities/champions/player.gd" type="Script" id=4]
-[ext_resource path="res://scripts/game/vision_area.gd" type="Script" id=5]
+[ext_resource path="res://scripts/game/sight_area.gd" type="Script" id=5]
 [ext_resource path="res://entities/bullet/bullet.tscn" type="PackedScene" id=6]
+[ext_resource path="res://entities/champions/Godotte/Q/orb/orb.tscn" type="PackedScene" id=7]
+[ext_resource path="res://entities/champions/Godotte/W/godotte_w.gd" type="Script" id=8]
+[ext_resource path="res://entities/champions/Godotte/E/kiss/kiss.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scripts/game/acquisition_area.gd" type="Script" id=10]
+[ext_resource path="res://entities/champions/Godotte/Q/godotte_q.gd" type="Script" id=11]
+[ext_resource path="res://entities/champions/Godotte/W/flames/fox_fire.tscn" type="PackedScene" id=12]
+[ext_resource path="res://entities/champions/Godotte/E/godotte_e.gd" type="Script" id=13]
+[ext_resource path="res://entities/champions/heal_spell.gd" type="Script" id=14]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.0
@@ -22,6 +30,9 @@ radius = 525.0
 [sub_resource type="CircleShape2D" id=5]
 radius = 1350.0
 
+[sub_resource type="CircleShape2D" id=6]
+radius = 610.5
+
 [node name="Player" type="RigidBody2D"]
 mode = 2
 physics_material_override = SubResource( 1 )
@@ -30,10 +41,11 @@ linear_damp = 0.0
 script = ExtResource( 4 )
 avatar_prefab = ExtResource( 1 )
 armor = 21.0
-damage = 53.0
+attack_damage = 53.0
 attack_speed = 0.668
 bullet_prefab = ExtResource( 6 )
 body = NodePath(".")
+ability_power = 0.0
 totem_prefab = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -49,6 +61,7 @@ shape = SubResource( 3 )
 [node name="AcquisitionRadius" type="Area2D" parent="."]
 input_pickable = false
 monitorable = false
+script = ExtResource( 10 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AcquisitionRadius"]
 shape = SubResource( 4 )
@@ -66,3 +79,39 @@ visible = false
 self_modulate = Color( 0, 0, 0, 1 )
 scale = Vector2( 1.9, 1.9 )
 texture = ExtResource( 3 )
+
+[node name="FoxFireRadius" type="Area2D" parent="."]
+input_pickable = false
+monitorable = false
+script = ExtResource( 10 )
+tracking = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FoxFireRadius"]
+shape = SubResource( 6 )
+
+[node name="Actions" type="Node2D" parent="."]
+
+[node name="Q" type="Node2D" parent="Actions"]
+script = ExtResource( 11 )
+cost = 65.0
+cooldown = 7.0
+cast_time = 0.25
+orb_prefab = ExtResource( 7 )
+
+[node name="W" type="Node2D" parent="Actions"]
+script = ExtResource( 8 )
+cost = 40.0
+cooldown = 9.0
+flames_prefab = ExtResource( 12 )
+fox_fire_area = NodePath("../../FoxFireRadius")
+
+[node name="E" type="Node2D" parent="Actions"]
+script = ExtResource( 13 )
+cost = 70.0
+cooldown = 12.0
+cast_time = 0.25
+kiss_prefab = ExtResource( 9 )
+
+[node name="F" type="Node2D" parent="Actions"]
+script = ExtResource( 14 )
+cooldown = 240.0

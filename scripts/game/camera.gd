@@ -27,6 +27,7 @@ func _set_zoom_level(value: float) -> void:
 	_zoom_level = clamp(value, min_zoom, max_zoom)
 	# Then, we ask the tween node to animate the camera's `zoom` property from its current value
 	# to the target zoom level.
+	#tween.remove_all()
 	tween.interpolate_property(
 		self,
 		"zoom",

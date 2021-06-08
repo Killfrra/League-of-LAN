@@ -2,13 +2,14 @@
 
 [ext_resource path="res://entities/minions/minion_avatar.gd" type="Script" id=1]
 [ext_resource path="res://sprites/godot_favicon.png" type="Texture" id=2]
-[ext_resource path="res://sprites/LightSprite.png" type="Texture" id=3]
+[ext_resource path="res://entities/light.tscn" type="PackedScene" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 100.0
 
 [node name="MinionAvatar" type="Node2D"]
 script = ExtResource( 1 )
+healthbar = NodePath("HealthBarContainer/ProgressBar")
 
 [node name="Icon" type="Sprite" parent="."]
 scale = Vector2( 1.095, 1.095 )
@@ -16,11 +17,8 @@ z_index = 3
 z_as_relative = false
 texture = ExtResource( 2 )
 
-[node name="Light2D" type="Light2D" parent="."]
-texture = ExtResource( 3 )
+[node name="Light2D" parent="." instance=ExtResource( 3 )]
 texture_scale = 1.85
-mode = 2
-shadow_enabled = true
 
 [node name="SelectionRadius" type="Area2D" parent="."]
 monitoring = false
@@ -28,3 +26,18 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionRadius"]
 shape = SubResource( 1 )
+
+[node name="HealthBarContainer" type="Node2D" parent="."]
+z_index = 4
+
+[node name="ProgressBar" type="ProgressBar" parent="HealthBarContainer"]
+margin_left = -30.0
+margin_top = -45.0
+margin_right = 30.0
+margin_bottom = -31.0
+mouse_filter = 2
+value = 100.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
