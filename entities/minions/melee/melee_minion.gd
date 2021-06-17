@@ -10,8 +10,8 @@ var radio_silence := true
 #TODO: Ignore Allied Collision before lane ("ghosted for 25s"?)
 
 func _ready():
-	($FirstAcquisitionRadius as VisionSubArea).set_team(team)
-	($WakeUpRadius as VisionSubArea).set_team(team)
+	($FirstAcquisitionRadius as AcquisitionArea).set_team(team)
+	($WakeUpRadius as AcquisitionArea).set_team(team)
 	$WakeUpRadius.connect("entity_entered", self, "wake_up")
 
 func on_autoacquisition_area_entered(entity):

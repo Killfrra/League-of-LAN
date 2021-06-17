@@ -207,7 +207,6 @@ __meta__ = {
 }
 
 [node name="Page1_Login" type="Panel" parent="GUI/PageSwitcher"]
-visible = false
 anchor_bottom = 1.0
 margin_right = 354.0
 script = ExtResource( 3 )
@@ -283,10 +282,10 @@ __meta__ = {
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = 50.0897
-margin_top = 36.205
-margin_right = -279.91
-margin_bottom = 60.205
+margin_left = 50.0
+margin_top = 36.0
+margin_right = -174.0
+margin_bottom = 60.0
 disabled = true
 text = "STAY SIGNED IN"
 
@@ -1554,9 +1553,9 @@ anchor_left = 0.036
 anchor_top = 0.725
 anchor_right = 0.117
 anchor_bottom = 1.0
-margin_left = -0.103996
+margin_left = -0.103994
 margin_top = -0.0500031
-margin_right = 0.16201
+margin_right = 0.162018
 margin_bottom = -34.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1740,6 +1739,7 @@ __meta__ = {
 }
 
 [node name="Page5_GameUI" type="Control" parent="GUI/PageSwitcher"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2

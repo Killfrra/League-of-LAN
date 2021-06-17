@@ -7,7 +7,6 @@ export(NodePath) onready var protects = get_node(protects) if protects else null
 
 func _ready():
 	seen_by_teams = [ 1, 1, 1 ]
-	seen_by_num = 2
 	sync_opponent(Lobby.opposite_team[team])
 	avatar.visible = true
 	
@@ -36,12 +35,14 @@ func set_target(to):
 
 func calc_priority(candidate: Node2D, victim = null):
 	var score = 0
-	if candidate.is_class("Player") and victim and victim.is_class("Player"):
-		score += 3
+	if candidate.is_class("Player"):
+		if victim and victim.is_class("Player"):
+			score += 3
+		else:
+			score += 1 - min(1, candidate.global_position.distance_to(global_position) / vision_radius)
 	elif candidate.is_class("MeleeMinon"):
 		score += 2
 	elif candidate.is_class("Minion"):
 		score += 1
-	score += 1 - min(1, candidate.global_position.distance_to(global_position) / vision_radius)
 	#print(name, " ", candidate.name, " ", score)
 	return score

@@ -14,6 +14,8 @@ func get_name():
 var timer
 var target_before_charm
 var attack_range_before_charm
+
+var caster_was_unseen := false
 func _apply(to):
 	._apply(to)
 	timer = to.get_tree().create_timer(_duration)
@@ -33,6 +35,25 @@ func _apply(to):
 		to.casting_disallowed += 1
 	if "attacking_disallowed" in to:
 		to.attacking_disallowed += 1
+	
+	#TODO: what if it's victium's personal sight restrictions?
+	_caster.connect("in_sight", self, "on_caster_seen")
+	_caster.connect("killed_by", self, "on_caster_killed")
+	on_caster_seen(null)
+
+#TODO: test these two funcs
+func on_caster_seen(by_team):
+	if caster_was_unseen:
+		caster_was_unseen = false
+		applied_to.movement_disallowed -= 1
+	elif !_caster.seen_by_teams[applied_to.team]:
+		caster_was_unseen = true
+		applied_to.movement_disallowed += 1
+
+func on_caster_killed(by):
+	#TODO: queue_free timer?
+	#timer.stop()
+	_dispel()
 
 func _stack(with):
 	._stack(with)
@@ -43,6 +64,10 @@ func _stack(with):
 		applied_to.recalculate_speed()
 
 func _dispel():
+	
+	if caster_was_unseen:
+		applied_to.movement_disallowed -= 1
+	
 	applied_to.target_locked = false
 	
 	#TODO: move to Autoattacking.restore_target or smth...

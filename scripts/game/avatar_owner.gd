@@ -5,7 +5,6 @@ extends Node2D
 
 export(Types.Team) var team
 var seen_by_teams := [0, 0, 0]
-onready var seen_by_num = seen_by_teams[0] + seen_by_teams[1] + seen_by_teams[2]
 
 signal out_of_sight(for_team)
 signal in_sight(for_team)
@@ -16,7 +15,6 @@ var effects := {}
 func on_seen_by(entity):
 	assert(entity.team != Types.Team.Spectators)
 	seen_by_teams[entity.team] += 1
-	seen_by_num += 1
 	if seen_by_teams[entity.team] == 1:
 		emit_signal("in_sight", entity.team)
 		sync_opponent(entity.team)
@@ -25,7 +23,6 @@ func on_seen_by(entity):
 func on_unseen_by(entity):
 	assert(entity.team != Types.Team.Spectators)
 	seen_by_teams[entity.team] -= 1
-	seen_by_num -= 1
 	if seen_by_teams[entity.team] == 0:
 		#TODO: fix "method not found" bug
 		emit_signal("out_of_sight", entity.team)

@@ -133,7 +133,7 @@ func killed_by(killer):
 	
 	global_position = spawn_manager.team_spawn[team].global_position
 	set_target(null)
-	untargetable -= 1
+	untargetable -= 1 #TODO: maybe +1?
 	casting_disallowed = 0
 	sync_set("health", health_max)
 	sync_set("mana", mana_max)

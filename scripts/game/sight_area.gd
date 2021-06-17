@@ -1,5 +1,4 @@
-#TODO: rename to SightArea
-class_name VisionArea, "res://editor_icons/true_sight_icon.svg"
+class_name SightArea, "res://editor_icons/true_sight_icon.svg"
 extends Area2D
 
 onready var parent = get_parent()

@@ -17,7 +17,7 @@ var target_in_range := false
 var reload_timer: Timer
 var ready_to_fire := true
 
-var acquisition_area: VisionSubArea
+var acquisition_area: AcquisitionArea
 
 func generate_variable_attributes():
 	.generate_variable_attributes()
@@ -134,7 +134,7 @@ func _targetable(candidate): # autotargetable
 	#&& candidate.seen_by_teams[team]
 	return !candidate.untargetable && (candidate.team != Types.Team.Spectators || strict_equality(candidate.target, self)) # do not attack monsters and bullets!
 
-func try_to_find_target_in_area(search_area: VisionSubArea): #try_to_find_another_target_in_area
+func try_to_find_target_in_area(search_area: AcquisitionArea): #try_to_find_another_target_in_area
 	var max_score
 	var candidate_with_max_score = null
 	for candidate in search_area.get_overlapping_areas():

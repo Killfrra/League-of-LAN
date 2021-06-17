@@ -1,5 +1,4 @@
-#TODO: rename to AcquisitionArea
-class_name VisionSubArea, "res://editor_icons/acquisition_range.svg"
+class_name AcquisitionArea, "res://editor_icons/acquisition_range.svg"
 extends Area2D
 
 signal entity_entered(intruder)

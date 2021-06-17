@@ -1,3 +1,4 @@
+class_name FoxFire
 extends Node2D
 
 #TODO: area.collision.disabled vs area.queue_free()
@@ -84,6 +85,10 @@ func release_flame(flame_sp, flame, target):
 	else:
 		flame.magic_damage = additional_damage
 	
+	#TODO: wrap into "should_double_damage_for"?
+	if target.is_class("Minion") && target.health / target.health_max < 0.2:
+		flame.magic_damage *= 2
+	
 	flame.set_physics_process(true)
 	
 	flame_sp.get_node("AcquisitionRadius/CollisionShape2D").set_deferred("disabled", true) #queue_free()
@@ -130,7 +135,7 @@ func on_flame_acquisition_area_entered(target, acquisition_area, flame, flame_sp
 		acquisition_area.disconnect("entity_entered", self, "on_flame_acquisition_area_entered")
 
 func try_to_find_priority_target():
-	var search_area: VisionSubArea = sender.get_node("FoxFireRadius")
+	var search_area: AcquisitionArea = sender.get_node("FoxFireRadius")
 	var max_score
 	var candidate_with_max_score = null
 	for candidate in search_area.get_overlapping_areas():
@@ -141,7 +146,7 @@ func try_to_find_priority_target():
 			if candidate.has_method("is_class"):
 				if candidate.is_class("Player"):
 					candidate_score = 3
-				elif candidate.is_class("Minion") && candidate.health < damage + additional_damage * 2:
+				elif candidate.is_class("Minion") && candidate.health < (damage + additional_damage * 2) * 2 if (candidate.health / candidate.health_max) < 0.2 else 1:
 					candidate_score = 2
 			if candidate_score < 1 && candidate == sender.target_of_last_autoattack && Lobby.get_ticks_msec() - sender.was_attacked_in_time < 3000:
 				candidate_score = 1

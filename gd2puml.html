@@ -352,6 +352,17 @@
 
         result.value += "\n@enduml"
         
+        /*
+            var (.*?) = get_node\(\1\) as (.*)
+            var $1: $2
+
+            var (.*?) = get_node\(\1\)\s*$
+            var $1: Node
+
+            var (.*?) = get_node\(\1\) if \1 else null$
+            var $1: Node = null
+        */
+
         return classes
     }
 </script>

@@ -1,5 +1,5 @@
-extends AvatarOwner
 class_name Kiss
+extends AvatarOwner
 
 var sender: Player
 var target: Vector2

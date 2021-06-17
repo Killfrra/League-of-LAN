@@ -1,5 +1,5 @@
-extends AvatarOwner
 class_name Orb
+extends AvatarOwner
 
 var sender: Player
 var target: Vector2
