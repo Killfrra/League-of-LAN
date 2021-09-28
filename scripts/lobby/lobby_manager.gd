@@ -14,6 +14,7 @@ var last_used_runes_and_spells := [
 
 signal logged_in(username)
 signal connected()
+signal disconnected()
 #signal disconnected()
 signal error(e)
 signal joined(player)
@@ -29,6 +30,7 @@ signal spawn()
 func _ready():
 	#Engine.time_scale = 15.0
 	get_tree().connect("network_peer_connected", self, "_on_network_peer_connected")
+	get_tree().connect("network_peer_disconnected", self, "_on_network_peer_disconnected")
 	
 func login(uname):
 	username = uname
@@ -63,7 +65,14 @@ func host(game_name: String, team_size: int, map, type):
 func _on_network_peer_connected(id: int):
 	if id != 1:
 		rpc_id(id, "connected", Game.serialize_room_info())
-	
+		
+func _on_network_peer_disconnected(id: int):
+	rpc_id(0, "disconnected", id)
+
+puppetsync func disconnected(id: int):
+	Game.remove_peer_from_lists(id)
+	emit_signal("disconnected")
+
 puppet func connected(info):
 	Game.deserialize_room_info(info)
 	emit_signal("connected")
